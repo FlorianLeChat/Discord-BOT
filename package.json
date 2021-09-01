@@ -1,0 +1,19 @@
+{
+  "name": "discordbot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "iso-639-1": "^2.1.8",
+    "moment": "^2.29.1",
+    "request": "^2.88.2",
+    "superagent": "^6.1.0",
+    "twit": "^2.2.11"
+  }
+}
