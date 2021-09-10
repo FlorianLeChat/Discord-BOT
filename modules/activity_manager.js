@@ -15,7 +15,7 @@ const activities = [
 	"One Two Three, viva la guerre d'Algérie"
 ];
 
-const activity = (bot) =>
+module.exports.updateActivity = (bot) =>
 {
 	var index = Math.floor(Math.random() * (activities.length - 1) + 1);
 
@@ -23,5 +23,3 @@ const activity = (bot) =>
 
 	console.log(`Nouvelle activité Discord : \`${activities[index]}\`.`)
 };
-
-module.exports = activity

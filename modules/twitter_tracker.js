@@ -2,10 +2,10 @@
 // Suivi de certains comptes Twitter.
 // Source : https://www.npmjs.com/package/twitter-api-v2
 //
-const { bearerToken, twitterChannel } = require("../config.json");
-const { ETwitterStreamEvent, TwitterApi } = require("twitter-api-v2");
+const {bearerToken, twitterChannel} = require("../config.json");
+const {ETwitterStreamEvent, TwitterApi} = require("twitter-api-v2");
 
-const twitter = async(bot) => {
+module.exports.streamTwitter = async(bot) => {
 
 	// On initialise le module de l'API Twitter.
 	const client = new TwitterApi(bearerToken);
@@ -89,6 +89,3 @@ const twitter = async(bot) => {
 	);
 
 };
-
-// Exportation de la fonction d'initialisation.
-module.exports = twitter
