@@ -5,12 +5,15 @@ const fileSystem = require("fs");
 const createCommands = async(bot) => {
 
 	fileSystem.readdir("./commands/", async(error, files) => {
+
+		// On vérifie s'il n'y a pas une erreur interne avec le système de fichiers;
 		if (error)
 		{
 			console.log("[Erreur] Une erreur interne s'est produite lors de la récupération des scripts.", error);
 			return;
 		}
 
+		// On récupère alors le résultat et on le filtre pour récupérer seulement les fichiers JavaScript.
 		var commands = files.filter(file => file.endsWith(".js"));
 
 		if (commands.length <= 0)
@@ -19,6 +22,7 @@ const createCommands = async(bot) => {
 			return;
 		}
 
+		// On itére enfin à travers tous les fichiers pour les ajouter.
 		commands.forEach(file => {
 			const command = require(`../commands/${file}`);
 
@@ -28,6 +32,7 @@ const createCommands = async(bot) => {
 		});
 
 		console.log(`[Info] ${commands.length} fichiers ont été chargés.`);
+
 	});
 
 }
