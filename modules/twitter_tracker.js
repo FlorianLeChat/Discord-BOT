@@ -2,44 +2,84 @@
 // Suivi de certains comptes Twitter.
 // Source : https://www.npmjs.com/package/twitter-api-v2
 //
+const { bearerToken, twitterChannel } = require("../config.json");
 const { ETwitterStreamEvent, TwitterApi } = require("twitter-api-v2");
-const follows = [
-	"217749896", // Marine <3
-	"338985020", // AFP (FR)
-	"24744541", // Le Monde (FR)
-	"1001029225476972545", // Ministère de l'Intérieur (FR)
-	"2097571", // CNN International (US)
-	"742143", // BBC World (UK)
-];
 
-const client = new TwitterApi("AAAAAAAAAAAAAAAAAAAAAP5bGgEAAAAAPDuTdl2h3Xj7ubiikeroSP%2BEXc8%3D0j5zi1Nw71BDZAif6CXMyq6eldvXW8XzKn63TXgP4IXpo5KkDo")
-const twitter = async() => {
+const twitter = async(bot) => {
 
+	// On initialise le module de l'API Twitter.
+	const client = new TwitterApi(bearerToken);
+
+	// On récupère les règles de filtrage actuelles avant de les supprimer.
 	const rules = await client.v2.streamRules();
+
 	if (rules.data?.length) {
 		await client.v2.updateStreamRules({
-			delete: { ids: rules.data.map(rule => rule.id) },
+			delete: {
+				ids: rules.data.map(rule => rule.id)
+			}
 		});
 	}
 
-	// Add our rules
+	// On ajoute les comptes à suivre pour l'affichage des nouveaux tweets.
 	await client.v2.updateStreamRules({
-		add: [{ value: 'JavaScript' }, { value: 'NodeJS' }],
+		add: [
+			{ value: "from:133663801"},
+			{ value: "from:217749896" }, 			// Marine <3
+			{ value: "from:338985020" }, 			// AFP (FR)
+			{ value: "from:24744541" }, 			// Le Monde (FR)
+			{ value: "from:1001029225476972545" }, 	// Ministère de l'intérieur (FR)
+			{ value: "from:2097571" }, 				// CNN International (US)
+			{ value: "from:742143" }, 				// BBC World (UK)
+		],
 	});
 
-
-	await client.v2.filterStream({
-		track: "RT -filter:retweets",
-		follow: follows
-	});
-
+	// On lance la recherche des tweets en indiquant les données que l'API doit nous retourner.
 	const stream = await client.v2.searchStream({
-		'tweet.fields': ['referenced_tweets', 'author_id'],
-		expansions: ['referenced_tweets.id'],
+		"tweet.fields": [
+			"author_id"
+		]
 	});
 
 	stream.autoReconnect = true;
+	stream.on(ETwitterStreamEvent.Data, async(eventInfo) =>
+	{
+		// On vérifie que le tweet n'est pas un RT.
+		if (eventInfo.data.text.startsWith("RT @"))
+			return;
 
+		// On vérifie alors la nationalité du compte.
+		var countryFlag = ":flag_fr:";
+
+		switch (eventInfo.data.author_id)
+		{
+			case "2097571": // CNN
+				countryFlag = ":flag_us:";
+				break;
+			case "742143": // BBC
+				countryFlag = ":flag_gb:";
+				break;
+			case "1001029225476972545": // Ministère de l'Intérieur
+				countryFlag = ":rotating_light: @everyone";
+				break;
+			case "217749896": // Marine <3
+				countryFlag += " <@183272411167326209> <@407212462740340747>";
+				break;
+		};
+
+		// On envoie ensuite le message dans le canal prévu à cet effet.
+		var userInfo = await client.v2.user(eventInfo.data.author_id)
+
+		bot.channels.fetch(twitterChannel)
+			.then(channel =>
+				channel.send(`https://twitter.com/${userInfo.data.username}/status/${eventInfo.data.id} ${countryFlag}`)
+			)
+			.catch(error =>
+				console.log(`[Error] Impossible de trouver le salon pour répliquer les messages Twitter, ${error}.`)
+			);
+	});
+
+	//
 	stream.on(ETwitterStreamEvent.ConnectionError, error =>
 		console.log("Connection error!", error),
 	);
@@ -48,49 +88,7 @@ const twitter = async() => {
 		console.log("Connection has been closed."),
 	);
 
-	stream.on(ETwitterStreamEvent.Data, eventData =>
-		console.log("Twitter has sent something:", eventData),
-	);
+};
 
-	stream.on(ETwitterStreamEvent.DataKeepAlive, () =>
-		console.log('Twitter has a keep-alive packet.'),
-	);
-
-}
-
+// Exportation de la fonction d'initialisation.
 module.exports = twitter
-
-
-// stream.on("tweet", function(tweet) {
-// 	// On vérifie si l'identifiant du compte est l'un des comptes suivis.
-// 	if (!follows.includes(tweet.user.id_str))
-// 		return;
-
-// 	// On vérifie alors la nationalité du compte.
-// 	var countryFlag = ":flag_fr:";
-
-// 	switch (tweet.user.id_str)
-// 	{
-// 		case "2097571": // CNN
-// 			countryFlag = ":flag_us:";
-// 			break;
-// 		case "742143": // BBC
-// 			countryFlag = ":flag_gb:";
-// 			break;
-// 		case "1001029225476972545": // Ministère de l'Intérieur
-// 			countryFlag = ":rotating_light: @everyone";
-// 			break;
-// 		case "217749896": // Marine
-// 			countryFlag += " <@183272411167326209> <@407212462740340747>";
-// 			break;
-// 	};
-
-// 	// On envoie finalement le message.
-// 	bot.channels.fetch("740960089195937873")
-// 		.then(channel =>
-// 			channel.send(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str} ${countryFlag}`)
-// 		)
-// 		.catch(error =>
-// 			console.log(`[Error] Impossible de trouver le salon pour répliquer les messages Twitter, message ${error}.`)
-// 		);
-// });
