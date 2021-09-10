@@ -2,7 +2,7 @@
 // Création des commandes personnalisées.
 //
 const fileSystem = require("fs");
-const createCommands = async(bot) => {
+module.exports.commands = async(bot) => {
 
 	fileSystem.readdir("./commands/", async(error, files) => {
 
@@ -36,5 +36,3 @@ const createCommands = async(bot) => {
 	});
 
 }
-
-module.exports = createCommands
