@@ -1,7 +1,7 @@
 //
 // Gestion des messages
 //
-const { prefix, token } = require("./config.json");
+const prefix = require("./config.json");
 const cooldowns = new discord.Collection();
 
 const messageHandler = async(message) => {
@@ -99,12 +99,10 @@ const messageHandler = async(message) => {
 	};
 };
 
-bot.on("message", async(message) => {
+bot.on("messageCreate", async(message) => {
 	messageHandler(message);
 });
 
 bot.on("messageUpdate", async(_oldMessage, newMessage) => {
 	messageHandler(newMessage);
 });
-
-bot.login(token);
