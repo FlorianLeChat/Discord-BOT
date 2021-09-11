@@ -89,7 +89,7 @@ module.exports = {
 							.setAuthor(bot.user.username, bot.user.avatarURL())
 							.setTitle("Erreur SQL")
 							.setDescription(message)
-							.addField("Message d'erreur :", error);
+							.addField("Message d'erreur :", error.message);
 
 						channel.send({ embeds: [ messageEmbed ] });
 
@@ -121,7 +121,7 @@ module.exports = {
 							.setAuthor(bot.user.username, bot.user.avatarURL())
 							.setTitle("Erreur SQL")
 							.setDescription("Requête lors de la requête SQL.")
-							.addField("Message d'erreur :", error);
+							.addField("Message d'erreur :", error.message);
 
 						channel.send({ embeds: [ messageEmbed ] });
 
@@ -188,7 +188,7 @@ module.exports = {
 							.setAuthor(bot.user.username, bot.user.avatarURL())
 							.setTitle("Erreur SQL")
 							.setDescription(message)
-							.addField("Message d'erreur :", error);
+							.addField("Message d'erreur :", error.message);
 
 						channel.send({ embeds: [ messageEmbed ] });
 
@@ -222,7 +222,7 @@ module.exports = {
 							.setAuthor(bot.user.username, bot.user.avatarURL())
 							.setTitle("Erreur SQL")
 							.setDescription("Requête lors de la requête SQL.")
-							.addField("Message d'erreur :", error);
+							.addField("Message d'erreur :", error.message);
 
 						channel.send({ embeds: [ messageEmbed ] });
 
