@@ -2,23 +2,21 @@
 // Activités personnalisées du bot.
 //
 const activities = [
-	"Marine contre les incivilités",
-	"Affronte les arabes",
-	"#TeamJUL",
-	"Macron vs Marine",
-	"Allah akbar",
-	"Niko la grosse merde",
-	"White Lives Matter",
-	"Thaïs <3",
-	"Made by Florian :D",
-	"Wallah j'te braque",
-	"One Two Three, viva la guerre d'Algérie"
+	"Macron à Marseille / Les Marseillais à L'Elysée ",
+	"Attention ! Risque de chute de Karim sur l'aéroport de Kaboul",
+	"« Les mots construisent des ponts vers des régions inexplorées » - A. Hitler",
+	"Zemmour vs Marine",
+	"Talibans Lives Matter",
+	"#Zemmour2022",
+	"Propriétaire d'un bar gay à La Mecque",
+	"Made by FlOwOrian",
+	"LGBT is not okay, heterosexuality is natural law"
 ]
 
 module.exports = {
 
 	// Définition de l'activité.
-	setActivity: (bot, name, type = "WATCHING") => {
+	setActivity: (bot, name, type = "PLAYING") => {
 
 		bot.user.setActivity(name, {
 			type: type
