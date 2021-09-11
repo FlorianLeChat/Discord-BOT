@@ -44,7 +44,28 @@ bot.on("ready", () => {
 bot.commands = new discord.Collection()
 
 const { createCommands } = require("./modules/commands_loader.js")
-createCommands(bot)
+
+bot.on("ready", () => {
+
+	createCommands(bot)
+
+})
+
+//
+// Gestion du chat & exécution des commandes.
+//
+const { sendMessage } = require("./modules/messages_handler.js")
+
+bot.on("messageCreate", (message) => {
+
+	sendMessage(bot, message)
+})
+
+bot.on("messageUpdate", (_, newMessage) => {
+
+	sendMessage(bot, newMessage)
+
+})
 
 //
 // Lancement du suivi des comptes Twitter.
