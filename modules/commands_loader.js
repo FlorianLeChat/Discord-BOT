@@ -4,7 +4,7 @@
 const discord = require("discord.js")
 const fileSystem = require("fs")
 
-const settings = require("./data/__internal__.json")
+const settings = require("../data/__internal__.json")
 
 module.exports.createCommands = async(bot) => {
 
@@ -21,7 +21,7 @@ module.exports.createCommands = async(bot) => {
 					.setAuthor(bot.user.username, bot.user.avatarURL())
 					.setTitle("Erreur du système de fichiers")
 					.setDescription("Une erreur interne s'est produite lors de la récupération des commandes.")
-					.addField("Message d'erreur :", error);
+					.addField("Message d'erreur :", error.message);
 
 				channel.send({ embeds: [ messageEmbed ] });
 
@@ -46,7 +46,7 @@ module.exports.createCommands = async(bot) => {
 		}
 
 		// On envoie enfin une notification au Discord de débogage.
-		bot.channels.fetch(masterChannel).then(channel => {
+		bot.channels.fetch(settings.masterChannel).then(channel => {
 
 			const messageEmbed = new discord.MessageEmbed()
 				.setColor(settings.greenColor)
