@@ -2,8 +2,8 @@
 // Suivi de certaines actualités Twitter.
 // Source : https://www.npmjs.com/package/twitter-api-v2
 //
-const { twitterToken, red, orange } = require("../data/__internal__.json")
 const { ETwitterStreamEvent, TwitterApi } = require("twitter-api-v2")
+const { twitterToken, redColor, orangeColor } = require("../data/__internal__.json")
 
 module.exports.streamTwitter = async(bot) => {
 
@@ -46,7 +46,10 @@ module.exports.streamTwitter = async(bot) => {
 			{ value: "from:24744541" }, 			// Le Monde (FR)
 			{ value: "from:1001029225476972545" }, 	// Ministère de l'intérieur (FR)
 			{ value: "from:2097571" }, 				// CNN International (US)
-			{ value: "from:742143" } 				// BBC World (UK)
+			{ value: "from:742143" }, 				// BBC World (UK)
+			{ value: "from:19897138" },				// India Today (IND)
+			{ value: "from:56644534" }, 			// CCTV (CHN)
+			{ value: "from:64643056" } 				// RT (RUS)
 		]
 	})
 
@@ -73,6 +76,15 @@ module.exports.streamTwitter = async(bot) => {
 				break
 			case "742143": // BBC
 				countryFlag = ":flag_gb:"
+				break
+			case "19897138": // India Today
+				countryFlag = ":flag_in:"
+				break
+			case "56644534": // CCTV
+				countryFlag = ":flag_cn:"
+				break
+			case "64643056": // RT
+				countryFlag = ":flag_ru:"
 				break
 			case "1001029225476972545": // Ministère de l'Intérieur
 				countryFlag = ":rotating_light: @everyone"
@@ -108,7 +120,7 @@ module.exports.streamTwitter = async(bot) => {
 			bot.channels.fetch(identifier).then(channel => {
 
 				const messageEmbed = new discord.MessageEmbed()
-					.setColor(orange)
+					.setColor(orangeColor)
 					.setAuthor(username, avatar)
 					.setTitle("Erreur API")
 					.setDescription("Une erreur de connexion s'est produite avec les serveurs Twitter.")
@@ -130,7 +142,7 @@ module.exports.streamTwitter = async(bot) => {
 			bot.channels.fetch(identifier).then(channel => {
 
 				const messageEmbed = new discord.MessageEmbed()
-					.setColor(red)
+					.setColor(redColor)
 					.setAuthor(username, avatar)
 					.setTitle("Erreur API")
 					.setDescription("La connexion entre le robot et les serveurs Twitter a été interrompue.")
