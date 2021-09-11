@@ -1,6 +1,9 @@
 //
 // Activités personnalisées du bot.
 //
+const discord = require("discord.js")
+const { masterChannel, blueColor } = require("../data/__internal__.json")
+
 const activities = [
 	"Macron à Marseille / Les Marseillais à L'Elysée ",
 	"Attention ! Risque de chute de Karim sur l'aéroport de Kaboul",
@@ -18,11 +21,23 @@ module.exports = {
 	// Définition de l'activité.
 	setActivity: (bot, name, type = "PLAYING") => {
 
+		// On définit d'abord l'activité personnalisée.
 		bot.user.setActivity(name, {
 			type: type
 		})
 
-		console.log(`Nouvelle activité Discord : « ${name} ».`)
+		// On envoie ensuite une notification dans le canal de débogage.
+		bot.channels.fetch(masterChannel).then(channel => {
+
+			const messageEmbed = new discord.MessageEmbed()
+				.setColor(blueColor)
+				.setAuthor(bot.user.username, bot.user.avatarURL())
+				.setTitle("Nouvelle activité")
+				.setDescription(`« ${name} ».`)
+
+			channel.send({ embeds: [ messageEmbed ] });
+
+		})
 
 	},
 
