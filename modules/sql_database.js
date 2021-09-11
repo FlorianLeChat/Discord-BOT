@@ -3,13 +3,14 @@
 // Source : https://www.npmjs.com/package/mysql
 //
 const mysql = require("mysql")
-const {sqlHost, sqlUser, sqlPassword, sqlDatabase} = require("../data/__internal__.json")
+const discord = require("discord.js")
+const settings = require("../data/__internal__.json")
 
 const connection = mysql.createConnection({
-    host: sqlHost,
-    user: sqlUser,
-    password: sqlPassword,
-    database: sqlDatabase
+    host: settings.sqlHost,
+    user: settings.sqlUser,
+    password: settings.sqlPassword,
+    database: settings.sqlDatabase
 })
 
 module.exports = {
@@ -22,7 +23,7 @@ module.exports = {
 			// On vérifie si la base de données n'est pas déjà connectée.
 			if (connection.state == "connected")
 			{
-				resolve("[Info] La base de données est déjà connectée.")
+				resolve("La base de données est déjà connectée.")
 				return
 			}
 
@@ -32,7 +33,7 @@ module.exports = {
 				// On vérifie si la connexion a réussie.
 				if (error)
 				{
-					reject(`[Erreur] Impossible de se connecter à la base de données SQL, ${error.message}`)
+					reject("Impossible de se connecter à la base de données SQL", error.message)
 					return
 				}
 
@@ -46,7 +47,7 @@ module.exports = {
 				)`)
 
 				// On affiche enfin le message de connexion avec l'identifiant associé.
-				resolve(`[Info] Connexion réussie à la base de données, ID : ${connection.threadId}.`)
+				resolve(`Connexion réussie à la base de données, ID : ${connection.threadId}.`)
 
 			})
 
@@ -55,16 +56,44 @@ module.exports = {
 	},
 
 	// Définition d'une valeur sauvegardée.
-	setSaveData: (id, name, value) => {
+	setSaveData: (bot, id, name, value) => {
 
 		return new Promise(async() => {
 
 			// On vérifie si la connexion avec la base de données est déjà établie.
+			// Note : on envoie alors une notification dans un Discord de débogage.
 			await module.exports.connect()
-				.then(console.log)
-				.catch((message) => {
+				.then(message => {
 
-					console.log(message)
+					// Information
+					bot.channels.fetch(settings.masterChannel).then(channel => {
+
+						const messageEmbed = new discord.MessageEmbed()
+							.setColor(settings.blueColor)
+							.setAuthor(bot.user.username, bot.user.avatarURL())
+							.setTitle("Informations SQL")
+							.setDescription(message)
+
+						channel.send({ embeds: [ messageEmbed ] });
+
+					})
+
+				})
+				.catch((message, error) => {
+
+					// Erreur
+					bot.channels.fetch(settings.masterChannel).then(channel => {
+
+						const messageEmbed = new discord.MessageEmbed()
+							.setColor(settings.redColor)
+							.setAuthor(bot.user.username, bot.user.avatarURL())
+							.setTitle("Erreur SQL")
+							.setDescription(message)
+							.addField("Message d'erreur :", error);
+
+						channel.send({ embeds: [ messageEmbed ] });
+
+					})
 
 					return
 
@@ -82,16 +111,26 @@ module.exports = {
 
 			connection.query(selectQuery, (error, results) => {
 
-				// On affiche un message d'erreur si la requête échoue.
+				// On envoie une notification d'erreur si la requête échoue.
 				if (error)
 				{
-					console.log(`[Erreur] Erreur lors de la requête SQL, ${error.message}`)
+					bot.channels.fetch(settings.masterChannel).then(channel => {
+
+						const messageEmbed = new discord.MessageEmbed()
+							.setColor(settings.redColor)
+							.setAuthor(bot.user.username, bot.user.avatarURL())
+							.setTitle("Erreur SQL")
+							.setDescription("Requête lors de la requête SQL.")
+							.addField("Message d'erreur :", error);
+
+						channel.send({ embeds: [ messageEmbed ] });
+
+					})
+
 					return
 				}
 
 				// Dans le cas contraire, on vérifie le nombre de résultats.
-				console.log(results)
-
 				if (results.length <= 0)
 				{
 					// Ajout d'une nouvelle entrée.
@@ -116,16 +155,44 @@ module.exports = {
 	},
 
 	// Récupération d'une valeur sauvegardée.
-	getSaveData: (id, name, fallback) => {
+	getSaveData: (bot, id, name, fallback) => {
 
 		return new Promise(async(resolve) => {
 
 			// On vérifie si la connexion avec la base de données est déjà établie.
+			// Note : on envoie alors une notification dans un Discord de débogage.
 			await module.exports.connect()
-				.then(console.log)
-				.catch((message) => {
+				.then(message => {
 
-					console.log(message)
+					// Information
+					bot.channels.fetch(settings.masterChannel).then(channel => {
+
+						const messageEmbed = new discord.MessageEmbed()
+							.setColor(settings.blueColor)
+							.setAuthor(bot.user.username, bot.user.avatarURL())
+							.setTitle("Informations SQL")
+							.setDescription(message)
+
+						channel.send({ embeds: [ messageEmbed ] });
+
+					})
+
+				})
+				.catch((message, error) => {
+
+					// Erreur
+					bot.channels.fetch(settings.masterChannel).then(channel => {
+
+						const messageEmbed = new discord.MessageEmbed()
+							.setColor(settings.redColor)
+							.setAuthor(bot.user.username, bot.user.avatarURL())
+							.setTitle("Erreur SQL")
+							.setDescription(message)
+							.addField("Message d'erreur :", error);
+
+						channel.send({ embeds: [ messageEmbed ] });
+
+					})
 
 					resolve(fallback)
 
@@ -145,9 +212,24 @@ module.exports = {
 			connection.query(selectQuery, (error, results) => {
 
 				// On vérifie si le résultat n'est pas une erreur.
+				// Note : on en profite aussi pour envoyer une notification sur un Discord de débogage.
 				if (error)
 				{
+					bot.channels.fetch(settings.masterChannel).then(channel => {
+
+						const messageEmbed = new discord.MessageEmbed()
+							.setColor(settings.redColor)
+							.setAuthor(bot.user.username, bot.user.avatarURL())
+							.setTitle("Erreur SQL")
+							.setDescription("Requête lors de la requête SQL.")
+							.addField("Message d'erreur :", error);
+
+						channel.send({ embeds: [ messageEmbed ] });
+
+					})
+
 					resolve(fallback)
+
 					return
 				}
 
