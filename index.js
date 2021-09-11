@@ -39,6 +39,14 @@ bot.on("ready", () => {
 })
 
 //
+// Création des commandes.
+//
+bot.commands = new discord.Collection()
+
+const { createCommands } = require("./modules/commands_loader.js")
+createCommands(bot)
+
+//
 // Lancement du suivi des comptes Twitter.
 //
 const { streamTwitter } = require("./modules/twitter_tracker.js")

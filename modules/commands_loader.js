@@ -1,38 +1,63 @@
 //
 // Création des commandes personnalisées.
 //
-const fileSystem = require("fs");
-module.exports.commands = async(bot) => {
+const discord = require("discord.js")
+const fileSystem = require("fs")
+
+const settings = require("./data/__internal__.json")
+
+module.exports.createCommands = async(bot) => {
 
 	fileSystem.readdir("./commands/", async(error, files) => {
 
-		// On vérifie s'il n'y a pas une erreur interne avec le système de fichiers;
+		// On vérifie s'il n'y a pas une erreur interne avec le système de fichiers.
+		// Note : on en profite pour envoyer une notification à un Discord de débogage.
 		if (error)
 		{
-			console.log("[Erreur] Une erreur interne s'est produite lors de la récupération des scripts.", error);
-			return;
+			bot.channels.fetch(settings.masterChannel).then(channel => {
+
+				const messageEmbed = new discord.MessageEmbed()
+					.setColor(settings.redColor)
+					.setAuthor(bot.user.username, bot.user.avatarURL())
+					.setTitle("Erreur du système de fichiers")
+					.setDescription("Une erreur interne s'est produite lors de la récupération des commandes.")
+					.addField("Message d'erreur :", error);
+
+				channel.send({ embeds: [ messageEmbed ] });
+
+			})
+
+			return
 		}
 
 		// On récupère alors le résultat et on le filtre pour récupérer seulement les fichiers JavaScript.
-		var commands = files.filter(file => file.endsWith(".js"));
+		var commands = files.filter(file => file.endsWith(".js"))
 
-		if (commands.length <= 0)
+		if (commands.length > 0)
 		{
-			console.log("[Erreur] Aucune commande est actuellement disponible.");
-			return;
+			// On itére ensuite à travers tous les fichiers pour les ajouter.
+			commands.forEach(file => {
+
+				// const command = require(`../commands/${file}`)
+
+				// bot.commands.set(command.name, command)
+
+			})
 		}
 
-		// On itére enfin à travers tous les fichiers pour les ajouter.
-		commands.forEach(file => {
-			const command = require(`../commands/${file}`);
+		// On envoie enfin une notification au Discord de débogage.
+		bot.channels.fetch(masterChannel).then(channel => {
 
-			console.log(`[Info] Le fichier ${file} a été chargé.`);
+			const messageEmbed = new discord.MessageEmbed()
+				.setColor(settings.greenColor)
+				.setAuthor(bot.user.username, bot.user.avatarURL())
+				.setTitle("Chargement des commandes")
+				.setDescription(`${commands.length} commandes ont été chargées.`)
 
-			bot.commands.set(command.name, command);
-		});
+			channel.send({ embeds: [ messageEmbed ] });
 
-		console.log(`[Info] ${commands.length} fichiers ont été chargés.`);
+		})
 
-	});
+	})
 
 }
