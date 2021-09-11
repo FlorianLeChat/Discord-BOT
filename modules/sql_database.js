@@ -1,5 +1,6 @@
 //
-// Initialisation de la base de don
+// Enregistrement de données via base de données SQL.
+// Source : https://www.npmjs.com/package/mysql
 //
 const mysql = require("mysql")
 const {sqlHost, sqlUser, sqlPassword, sqlDatabase} = require("../data/__internal__.json")
