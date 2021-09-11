@@ -124,7 +124,7 @@ module.exports.streamTwitter = async(bot) => {
 					.setAuthor(username, avatar)
 					.setTitle("Erreur API")
 					.setDescription("Une erreur de connexion s'est produite avec les serveurs Twitter.")
-					.addField("Message d'erreur:", error);
+					.addField("Message d'erreur :", error);
 
 				channel.send({ embeds: [ messageEmbed ] });
 
