@@ -1,108 +1,112 @@
 //
-// Gestion des messages
+// Gestion des messages/commandes.
 //
-const prefix = require("./config.json");
-const cooldowns = new discord.Collection();
+const discord = require("discord.js")
+const { masterChannel, redColor } = require("../data/__internal__.json")
 
-const messageHandler = async(message) => {
-	//
-	// Permet d'informer l'utilisateur qu'il a mentionné le robot sans raison.
-	//
+const prefix = "/" // Slash Commands
+const cooldowns = new discord.Collection()
+
+module.exports.sendMessage = async(bot, message) => {
+
+	// On vérifie si la personne a mentionné un robot.
 	if (message.mentions.has(bot.user) && !message.mentions.everyone)
 	{
 		message.reply("Pourquoi mentionner un bot ? :robot:")
-		return;
-	};
+		return
+	}
 
-	//
-	// Permet de ne pas prendre en compte les messages du bot ou ceux en messages privés.
-	//
+	// On évite de vérifier les messages du bot ou ceux reçus en messages privés.
 	if (message.author.bot || message.channel.type == "dm")
-		return;
+		return
 
-	//
-	// Permet de répondre automatiquement lors de certaines phrases de salutations.
-	//
-	if (message.content == "Bonjour" || message.content == "Coucou" || message.content == "Salut")
-		return message.reply("Bonjour à toi, jeune entrepreneur !");
+	// On regarde si on doit répondre automatiquement
+	var content = message.content.toLowerCase()
 
-	//
-	// Permet de pas exécuter le reste du code tant que le joueur n'a pas mis le préfix pour les commandes du bot.
-	//
+	if (content.includes("bonjour") || content.includes("coucou") || content.includes("salut") || content.includes("yo"))
+		return message.reply("Bonjour à toi, jeune entrepreneur !")
+
+	// On vérifie si on tente d'utiliser une commande.
 	if (!message.content.startsWith(prefix))
-		return;
+		return
 
-	//
-	// Permet de vérifier la commande (ou son alias) existe.
-	//
-	const args = message.content.slice(prefix.length).trim().split(/ +/);
-	const commandName = args.shift().toLowerCase();
+	// On vérifie si la commande (ou son alias) existe.
+	const args = message.content.slice(prefix.length).trim().split(/ +/)
+	const commandName = args.shift().toLowerCase()
 
-	const command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+	const command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
 
 	if (!command)
-		return;
+		return
 
-	//
-	// Permet de mettre un délai entre chaque exécution de commande.
+	// On applique un délai entre chaque exécution de commande.
 	// Note : cela s'applique seulement aux non-administrateurs.
-	//
+	const cooldown = 3000
+
 	if (!message.member.hasPermission("MANAGE_MESSAGES"))
 	{
+		// On vérifie si un temps d'attente est déjà en place.
 		if (!cooldowns.has(command.name))
-			cooldowns.set(command.name, new discord.Collection());
+			cooldowns.set(command.name, new discord.Collection())
 
-		const now = Date.now();
-		const timestamps = cooldowns.get(command.name);
-		const cooldownAmount = 3000;
+		// Dans le cas contraire, on supprime le message en affichant le temps restant.
+		const now = Date.now()
+		const timestamps = cooldowns.get(command.name)
 
 		if (timestamps.has(message.author.id))
 		{
-			const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+			const expirationTime = timestamps.get(message.author.id) + cooldown
 
 			if (now < expirationTime)
 			{
-				const timeLeft = (expirationTime - now) / 1000;
+				const timeLeft = (expirationTime - now) / 1000
 
-				message.delete();
+				message.delete()
 
-				return message.reply(`Vous devez attendre ${timeLeft.toFixed(1)} secondes entre chaque exécution de commandes.`);
-			};
-		};
+				return message.reply(`Vous devez attendre ${timeLeft.toFixed(1)} secondes entre chaque exécution de commandes.`)
+			}
+		}
 
-		timestamps.set(message.author.id, now);
+		// On définit enfin une suppression automatique après le temps d'attente écoulé.
+		timestamps.set(message.author.id, now)
 
-		setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
-	};
+		setTimeout(() => timestamps.delete(message.author.id), cooldown)
+	}
 
-	//
-	// Permet de vérifier la présence d'arguments nécessaires pour l'exécution de la commande.
-	//
+	// On vérifie ensuite la présence d'arguments nécessaires pour l'exécution de la commande.
 	if (command.args && !args.length || message == "help")
 	{
-		let reply = "Des arguments sont nécessaires pour exécuter cette commande.";
+		var reply = "Des arguments sont nécessaires pour exécuter cette commande."
 
 		if (command.usage)
-			reply += `\nUtilisation: \`${prefix}${command.name} ${command.usage}\``;
+			reply += `\nUtilisation: \`${prefix}${command.name} ${command.usage}\``
 
-		return message.reply(reply);
-	};
+		return message.reply(reply)
+	}
 
-	//
-	// Permet d'exécuter (si possible) la commande.
-	//
-	try {
-		command.execute(bot, message, args);
-	} catch (error) {
-		console.error;
-		message.reply(`Une erreur interne est survenue lors de l'exécution de la commande \`${command.name}\`:\n\`${error.message}\`.`);
-	};
-};
+	// On exécute enfin (si possible) la commande voulue.
+	try
+	{
+		command.execute(bot, message, args)
+	}
+	catch (error)
+	{
+		// Message d'erreur à l'auteur de la commande.
+		message.reply(`Une erreur interne est survenue lors de l'exécution de la commande « ${command.name} » :\n${error.message}.`)
 
-bot.on("messageCreate", async(message) => {
-	messageHandler(message);
-});
+		// Notification au serveur de débogage Discord.
+		bot.channels.fetch(masterChannel).then(channel => {
 
-bot.on("messageUpdate", async(_oldMessage, newMessage) => {
-	messageHandler(newMessage);
-});
+			const messageEmbed = new discord.MessageEmbed()
+				.setColor(redColor)
+				.setAuthor(bot.user.username, bot.user.avatarURL())
+				.setTitle("Erreur d'exécution d'une commande")
+				.setDescription(`Une erreur interne est survenue lors de l'exécution de la commande : « ${command.name} ».`)
+				.addField("Message d'erreur :", error.message);
+
+			channel.send({ embeds: [ messageEmbed ] });
+
+		})
+	}
+
+}
