@@ -89,9 +89,6 @@ module.exports.streamTwitter = async(bot) => {
 			case "1001029225476972545": // Ministère de l'Intérieur
 				countryFlag = ":rotating_light: @everyone"
 				break
-			case "217749896": // Marine <3
-				countryFlag += " <@183272411167326209> <@407212462740340747>"
-				break
 		}
 
 		// On envoie ensuite le message dans les canaux récupérés précédemment.
