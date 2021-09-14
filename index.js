@@ -11,6 +11,7 @@ const bot = new discord.Client({
 	// https://discordjs.guide/additional-info/changes-in-v13.html#allowed-mentions
 	allowedMentions: {
 		parse: [
+			"everyone",
 			"users",
 			"roles"
 		],
