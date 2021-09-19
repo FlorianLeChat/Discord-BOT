@@ -23,7 +23,7 @@ module.exports.sendMessage = async(bot, message) => {
 	// On regarde si on doit répondre automatiquement
 	var content = message.content.toLowerCase()
 
-	if (content.includes("bonjour") || content.includes("coucou") || content.includes("salut") || content.includes("yo"))
+	if (content.includes("bonjour") || content.includes("coucou") || content.includes("salut"))
 		return message.reply("Bonjour à toi, jeune entrepreneur !")
 
 	// On vérifie si on tente d'utiliser une commande.
