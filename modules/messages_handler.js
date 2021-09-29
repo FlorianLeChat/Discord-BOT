@@ -21,7 +21,7 @@ module.exports.sendMessage = async(bot, message) => {
 		return
 
 	// On regarde si on doit répondre automatiquement
-	var content = message.content.toLowerCase()
+	let content = message.content.toLowerCase()
 
 	if (content.includes("bonjour") || content.includes("coucou") || content.includes("salut"))
 		return message.reply("Bonjour à toi, jeune entrepreneur !")
@@ -76,7 +76,7 @@ module.exports.sendMessage = async(bot, message) => {
 	// On vérifie ensuite la présence d'arguments nécessaires pour l'exécution de la commande.
 	if (command.args && !args.length || message == "help")
 	{
-		var reply = "Des arguments sont nécessaires pour exécuter cette commande."
+		let reply = "Des arguments sont nécessaires pour exécuter cette commande."
 
 		if (command.usage)
 			reply += `\nUtilisation: \`${prefix}${command.name} ${command.usage}\``

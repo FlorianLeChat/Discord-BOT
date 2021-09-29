@@ -9,7 +9,7 @@ module.exports.streamTwitter = async(bot) => {
 
 	// On récupère tous les canaux pour envoyer les messages d'actualités.
 	// Note : ce service est désactivé si aucun salon est trouvé.
-	var identifiers = []
+	let identifiers = []
 
 	bot.channels.cache.forEach(channel => {
 
@@ -67,7 +67,7 @@ module.exports.streamTwitter = async(bot) => {
 			return
 
 		// On vérifie alors la nationalité du compte.
-		var countryFlag = ":flag_fr:"
+		let countryFlag = ":flag_fr:"
 
 		switch (eventInfo.data.author_id)
 		{
@@ -92,7 +92,7 @@ module.exports.streamTwitter = async(bot) => {
 		}
 
 		// On envoie ensuite le message dans les canaux récupérés précédemment.
-		var userInfo = await client.v2.user(eventInfo.data.author_id)
+		let userInfo = await client.v2.user( eventInfo.data.author_id )
 
 		identifiers.forEach(identifier => {
 
@@ -107,8 +107,8 @@ module.exports.streamTwitter = async(bot) => {
 	})
 
 	// On affiche une notification dans tous les canaux d'actualités si une erreur de connexion se produit.
-	var username = bot.user.username
-	var avatar = bot.user.avatarURL()
+	const username = bot.user.username;
+	const avatar = bot.user.avatarURL()
 
 	stream.on(ETwitterStreamEvent.ConnectionError, error =>
 

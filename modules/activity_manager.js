@@ -44,7 +44,7 @@ module.exports = {
 	// Randomisation de l'activité.
 	randomActivity: (bot) => {
 
-		var index = Math.floor(Math.random() * (activities.length - 1) + 1)
+		let index = Math.floor( Math.random() * ( activities.length - 1 ) + 1 )
 
 		module.exports.setActivity(bot, activities[index])
 
