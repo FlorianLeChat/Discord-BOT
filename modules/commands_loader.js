@@ -31,7 +31,7 @@ module.exports.createCommands = async(bot) => {
 		}
 
 		// On récupère alors le résultat et on le filtre pour récupérer seulement les fichiers JavaScript.
-		var commands = files.filter(file => file.endsWith(".js"))
+		let commands = files.filter( file => file.endsWith( ".js" ) )
 
 		if (commands.length > 0)
 		{

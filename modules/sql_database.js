@@ -105,7 +105,7 @@ module.exports = {
 			value = connection.escape(value)
 
 			// On fait une première requête SQL pour vérifier si une valeur est déjà présente.
-			var selectQuery = `
+			const selectQuery = `
 				SELECT \`value\` FROM \`configuration\`
 				WHERE \`guildID\` = ${id} AND \`name\` = ${name};`
 
@@ -205,7 +205,7 @@ module.exports = {
 			name = connection.escape(name)
 
 			// On effectue enfin une requête pour obtenir la valeur.
-			var selectQuery = `
+			const selectQuery = `
 				SELECT \`value\` FROM \`configuration\`
 				WHERE \`guildID\` = ${id} AND \`name\` = ${name}`
 
