@@ -9,18 +9,18 @@ module.exports.streamTwitter = async ( bot ) => {
 
 	// On récupère tous les canaux pour envoyer les messages d'actualités.
 	// Note : ce service est désactivé si aucun salon est trouvé.
-	let identifiers = [];
+	let channels = [];
 
 	bot.channels.cache.forEach( channel => {
 
 		if ( channel.name.includes( "news" ) || channel.name.includes( "actualités" ) )
 		{
-			identifiers.push( channel.id );
+			channels.push( channel.id );
 		}
 
 	} );
 
-	if ( identifiers.length <= 0 )
+	if ( channels.length <= 0 )
 		return;
 
 	// On initialise le module de l'API Twitter.
@@ -94,7 +94,7 @@ module.exports.streamTwitter = async ( bot ) => {
 		// On envoie ensuite le message dans les canaux récupérés précédemment.
 		let userInfo = await client.v2.user( eventInfo.data.author_id );
 
-		identifiers.forEach( identifier => {
+		channels.forEach( identifier => {
 
 			bot.channels.fetch( identifier ).then( channel => {
 
@@ -112,7 +112,7 @@ module.exports.streamTwitter = async ( bot ) => {
 
 	stream.on( ETwitterStreamEvent.ConnectionError, error =>
 
-		identifiers.forEach( identifier => {
+		channels.forEach( identifier => {
 
 			bot.channels.fetch( identifier ).then( channel => {
 
@@ -134,7 +134,7 @@ module.exports.streamTwitter = async ( bot ) => {
 	// On affiche une notification dans tous les canaux d'actualités si la connexion se perd.
 	stream.on( ETwitterStreamEvent.ConnectionClosed, () =>
 
-		identifiers.forEach( identifier => {
+		channels.forEach( identifier => {
 
 			bot.channels.fetch( identifier ).then( channel => {
 
