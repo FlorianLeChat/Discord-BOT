@@ -37,10 +37,10 @@ module.exports = {
 					return;
 				}
 
-				// On créé alors la table de configuration.
-				connection.query( `CREATE TABLE IF NOT EXISTS \`configuration\` (
+				// On créé alors la table des données globales.
+				connection.query( `CREATE TABLE IF NOT EXISTS \`global_data\` (
 
-					\`guildID\` VARCHAR(20) NOT NULL,
+					\`userID\` VARCHAR(20) NOT NULL,
 					\`name\` VARCHAR(30) NOT NULL,
 					\`value\` VARCHAR(255) NOT NULL
 
@@ -106,8 +106,8 @@ module.exports = {
 
 			// On fait une première requête SQL pour vérifier si une valeur est déjà présente.
 			const selectQuery = `
-				SELECT \`value\` FROM \`configuration\`
-				WHERE \`guildID\` = ${ id } AND \`name\` = ${ name };`;
+				SELECT \`value\` FROM \`global_data\`
+				WHERE \`userID\` = ${ id } AND \`name\` = ${ name };`;
 
 			connection.query( selectQuery, ( error, results ) => {
 
@@ -135,7 +135,7 @@ module.exports = {
 				{
 					// Ajout d'une nouvelle entrée.
 					connection.query( `
-						INSERT INTO \`configuration\` (\`guildID\`, \`name\`, \`value\`)
+						INSERT INTO \`global_data\` (\`userID\`, \`name\`, \`value\`)
 						VALUES (${ id }, ${ name }, ${ value });
 					` );
 				}
@@ -143,8 +143,8 @@ module.exports = {
 				{
 					// Actualisation d'une entrée existante.
 					connection.query( `
-						UPDATE \`configuration\` SET \`value\` = ${ value }
-						WHERE \`guildID\` = ${ id } AND \`name\` = ${ name };
+						UPDATE \`global_data\` SET \`value\` = ${ value }
+						WHERE \`userID\` = ${ id } AND \`name\` = ${ name };
 					` );
 				}
 
@@ -206,8 +206,8 @@ module.exports = {
 
 			// On effectue enfin une requête pour obtenir la valeur.
 			const selectQuery = `
-				SELECT \`value\` FROM \`configuration\`
-				WHERE \`guildID\` = ${ id } AND \`name\` = ${ name }`;
+				SELECT \`value\` FROM \`global_data\`
+				WHERE \`userID\` = ${ id } AND \`name\` = ${ name }`;
 
 			connection.query( selectQuery, ( error, results ) => {
 
