@@ -21,7 +21,7 @@ module.exports = {
 		return new Promise( ( resolve, reject ) => {
 
 			// On vérifie si la base de données n'est pas déjà connectée.
-			if ( connection.state == "connected" )
+			if ( connection.state == "authenticated" )
 			{
 				resolve( "La base de données est déjà connectée." );
 				return;
@@ -33,7 +33,7 @@ module.exports = {
 				// On vérifie si la connexion a réussie.
 				if ( error )
 				{
-					reject( "Impossible de se connecter à la base de données SQL", error.message );
+					reject( `Impossible de se connecter à la base de données SQL. Code d'erreur : ${ error.code }` );
 					return;
 				}
 
@@ -79,7 +79,7 @@ module.exports = {
 					} );
 
 				} )
-				.catch( ( message, error ) => {
+				.catch( error => {
 
 					// Erreur
 					bot.channels.fetch( settings.masterChannel ).then( channel => {
@@ -88,8 +88,7 @@ module.exports = {
 							.setColor( settings.redColor )
 							.setAuthor( bot.user.username, bot.user.avatarURL() )
 							.setTitle( "Erreur SQL" )
-							.setDescription( message )
-							.addField( "Message d'erreur :", error.message );
+							.setDescription( error )
 
 						channel.send( { embeds: [messageEmbed] } );
 
@@ -121,7 +120,7 @@ module.exports = {
 							.setAuthor( bot.user.username, bot.user.avatarURL() )
 							.setTitle( "Erreur SQL" )
 							.setDescription( "Requête lors de la requête SQL." )
-							.addField( "Message d'erreur :", error.message );
+							.addField( "Code d'erreur :", error.code );
 
 						channel.send( { embeds: [messageEmbed] } );
 
@@ -178,7 +177,7 @@ module.exports = {
 					} );
 
 				} )
-				.catch( ( message, error ) => {
+				.catch( error => {
 
 					// Erreur
 					bot.channels.fetch( settings.masterChannel ).then( channel => {
@@ -187,8 +186,7 @@ module.exports = {
 							.setColor( settings.redColor )
 							.setAuthor( bot.user.username, bot.user.avatarURL() )
 							.setTitle( "Erreur SQL" )
-							.setDescription( message )
-							.addField( "Message d'erreur :", error.message );
+							.setDescription( error )
 
 						channel.send( { embeds: [messageEmbed] } );
 
@@ -222,7 +220,7 @@ module.exports = {
 							.setAuthor( bot.user.username, bot.user.avatarURL() )
 							.setTitle( "Erreur SQL" )
 							.setDescription( "Requête lors de la requête SQL." )
-							.addField( "Message d'erreur :", error.message );
+							.addField( "Code d'erreur :", error.error );
 
 						channel.send( { embeds: [messageEmbed] } );
 
