@@ -5,8 +5,9 @@ const discord = require( "discord.js" );
 const bot = new discord.Client( {
 
 	// GUILS + GUID_MEMBERS + GUILD_BANS + GUILD_MESSAGES + DIRECT_MESSAGES
+	// + GUILD_MESSAGE_REACTIONS
 	// https://discord.com/developers/docs/topics/gateway#list-of-intents
-	intents: new discord.Intents( 4615 ),
+	intents: new discord.Intents( 5639 ),
 
 	// https://discordjs.guide/additional-info/changes-in-v13.html#allowed-mentions
 	allowedMentions: {
@@ -76,6 +77,48 @@ const { streamTwitter } = require( "./modules/twitter_tracker.js" );
 bot.on( "ready", () => {
 
 	streamTwitter( bot );
+
+} );
+
+//
+// Exécution de l'événement du "No Nut November".
+// Note : fonctionne seulement durant le mois de novembre.
+//
+const { createMessage, updateCount } = require( "./modules/no_nut_november.js" );
+
+bot.on( "ready", () => {
+
+	// On vérifie si nous sommes au mois de novembre.
+	let month = new Date().getMonth();
+
+	if ( month != 10 )
+		return;
+
+	// On fait ensuite la création du tout premier message ou de son actualisation au démarrage.
+	createMessage( bot );
+
+	// On réalise enfin cette tâche tous les soirs à minuit.
+	setInterval( () => {
+
+		let timestamp = new Date();
+		timestamp = timestamp.getHours() + ":" + timestamp.getMinutes() + ":" + timestamp.getSeconds();
+
+		if ( timestamp == "0:0:0" )
+			createMessage( bot );
+
+	}, 1000 );
+
+} );
+
+bot.on( "messageReactionAdd", ( reaction, user ) => {
+
+	updateCount( bot, reaction, user, true );
+
+} );
+
+bot.on( "messageReactionRemove", ( reaction, user ) => {
+
+	updateCount( bot, reaction, user, false );
 
 } );
 
