@@ -1,21 +1,23 @@
 //
 // Événement du "No Nut November".
 //
-const settings = require( "../data/__internal__.json" );
 const excluders = [];
+const { setSaveData } = require( "./sql_database.js" );
 
-let days = 1;
+let days = new Date().getDate();
 let users = [];
 let message;
 
 module.exports = {
 
 	// Création du message d'informations des jours passés.
-	createMessage: () => {
+	createMessage: ( bot ) => {
 
 		// On recherche tous les canaux de l'événement avant d'afficher ou d'éditer le message.
 		// Note : on coupe l'exécution du script si aucun salon n'est trouvé.
 		let channels = [];
+
+		days++;
 
 		bot.channels.cache.forEach( channel => {
 
@@ -33,21 +35,20 @@ module.exports = {
 		let phrase = `:spy: :sweat_drops: Statut « **No Nuts November** » (Jour ${ days }) :\n`;
 		phrase += "\n:point_right: Pour prendre en compte votre présence, réagissez à ce message !\n";
 
-		users.forEach( identifier => {
-
-			const member = bot.users.cache.get( identifier );
+		for ( let identifier in users )
+		{
+			const user = bot.users.cache.get( identifier );
 
 			// On exclut tous les robots.
-			if ( member.user.bot )
-				continue;
-
-			// On exclut les utilisateurs qui ne peuvent pas participer.
-			if ( excluders.includes( member.user.id ) )
+			if ( user.bot )
 				return;
 
-			phrase += `- __${ member.user.username }__ : J+${ users[member.id] || 0 }\n`;
+			// On exclut les utilisateurs qui ne peuvent pas participer.
+			if ( excluders.includes( user.id ) )
+				return;
 
-		} );
+			phrase += `- __${ user.username }__ : J+${ users[user.id] || 0 }\n`;
+		};
 
 		phrase += "\n**Ces valeurs sont actualisées tous les jours à minuit.** :point_up_2:";
 
@@ -82,16 +83,13 @@ module.exports = {
 		if ( reaction.message.author.id != "468066164036206602" || !reaction.message.content.includes( "No Nuts November" ) )
 			return;
 
-		// On vérifie la liste des utilisateurs exclus de l'événement.
+		// On vérifie ensuite la liste des utilisateurs exclus de l'événement.
 		if ( excluders.includes( user.id ) )
 			return;
 
-		// On récupère ensuite (si possible) les données actuelles pour prendre les plus anciennes.
-		let current = await getSaveData( bot, user.id, "NNN", days );
-
-		users[user.id] = Math.min( current, days );
-
 		// On vérifie alors si on doit incrémenter une journée ou non à l'utilisateur.
+		users[user.id] = days;
+
 		if ( type == true )
 		{
 			// On évite le spam des réactions pour briser la logique de l'événement.
