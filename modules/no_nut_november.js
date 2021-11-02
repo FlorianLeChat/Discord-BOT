@@ -4,7 +4,7 @@
 const excluders = [];
 const { setSaveData } = require( "./sql_database.js" );
 
-let days = new Date().getDate();
+let days = new Date().getDate() - 1;
 let users = [];
 let message;
 
