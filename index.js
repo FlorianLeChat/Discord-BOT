@@ -141,7 +141,8 @@ bot.once( "ready", () => {
 			.setDescription( `Le robot « ${ bot.user.username } » a démarré avec succès.` )
 			.addField( "Serveurs présents :", bot.guilds.cache.size.toString() );
 
-		channel.send( { embeds: [messageEmbed] } );
+		channel.send( { embeds: [messageEmbed] } )
+			.catch( console.error );
 
 	} );
 
