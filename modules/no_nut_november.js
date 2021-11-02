@@ -6,7 +6,6 @@ const { setSaveData } = require( "./sql_database.js" );
 
 let days = new Date().getDate() - 1;
 let users = [];
-let message;
 
 module.exports = {
 
@@ -15,24 +14,24 @@ module.exports = {
 
 		// On recherche tous les canaux de l'événement avant d'afficher ou d'éditer le message.
 		// Note : on coupe l'exécution du script si aucun salon n'est trouvé.
+		let cache = bot.channels.cache;
 		let channels = [];
 
 		days++;
 
-		bot.channels.cache.forEach( channel => {
-
+		for ( const channel of cache.values() )
+		{
 			if ( channel.name.includes( "nnn" ) || channel.name.includes( "no-nut-november" ) )
 			{
 				channels.push( channel.id );
 			}
-
-		} );
+		};
 
 		if ( channels.length <= 0 )
 			return;
 
-		// On créé alors le message d'informations.
-		let phrase = `:spy: :sweat_drops: Statut « **No Nuts November** » (Jour ${ days }) :\n`;
+		// On créé le message d'information.
+		let phrase = `:spy: :sweat_drops: Statut « **No Nut November** » (Jour ${ days }) :\n`;
 		phrase += "\n:point_right: Pour prendre en compte votre présence, réagissez à ce message !\n";
 
 		for ( let identifier in users )
@@ -52,27 +51,50 @@ module.exports = {
 
 		phrase += "\n**Ces valeurs sont actualisées tous les jours à minuit.** :point_up_2:";
 
-		// On vérifie enfin si le message est encore présent pour effectuer certaines actions.
-		if ( message )
+		// On itére à travers tous les salons en mémoire.
+		for ( const identifier of channels.values() )
 		{
-			// On édite le message et on supprime toutes les réactions existantes.
-			message.edit( phrase );
-			message.reactions.removeAll()
-				.catch( console.error );
-		}
-		else
-		{
-			// On itére à travers tous les salons en mémoire pour envoyer le message.
-			channels.forEach( identifier => {
+			bot.channels.fetch( identifier ).then( channel => {
 
-				bot.channels.fetch( identifier ).then( channel => {
+				// On récupère un certain nombre de messages provenant du canal.
+				// Note : on limite la recherche des messages à un nombre de 10 pour éviter d'aller trop loin.
+				let edited = false;
 
-					channel.send( phrase );
+				channel.messages.fetch( { limit: 10 } ).then( messages => {
 
-				} );
+					// On vérifie alors si l'un des messages parle de l'événement et qu'il a été créé par le bot.
+					for ( const message of messages.values() )
+					{
+						if ( message.author.id == bot.user.id && message.content.includes( "No Nut November" ) )
+						{
+							// Si c'est le cas, on arrête la recherche et on édite le message actuel.
+							edited = true;
+
+							message.edit( phrase );
+							message.reactions.removeAll()
+								.catch( console.error );
+
+							break;
+						}
+
+					};
+
+					// Dans le cas contraire, on envoie ensuite un nouveau message.
+					if ( !edited )
+					{
+						channel.send( phrase )
+							.catch( console.error );
+					}
+
+					// On envoie enfin un @everyone fantôme pour prévenir que le message à été mis à jour.
+					channel.send( "@everyone" )
+						.then( message => setTimeout( () => message.delete(), 100 ) )
+						.catch( console.error );
+
+				} )
 
 			} );
-		}
+		};
 
 	},
 
@@ -80,7 +102,7 @@ module.exports = {
 	updateCount: async ( bot, reaction, user, type ) => {
 
 		// On vérifie si ce n'est pas le bot qui ajoute une réaction et/ou s'il ne s'agit pas du message actuel.
-		if ( reaction.message.author.id != "468066164036206602" || !reaction.message.content.includes( "No Nuts November" ) )
+		if ( reaction.message.author.id != "468066164036206602" || !reaction.message.content.includes( "No Nut November" ) )
 			return;
 
 		// On vérifie ensuite la liste des utilisateurs exclus de l'événement.
