@@ -40,9 +40,11 @@ module.exports =
 				// On créé alors la table des données globales.
 				connection.query( `CREATE TABLE IF NOT EXISTS \`global_data\` (
 
+					\`uniqueID\` INT NOT NULL AUTO_INCREMENT,
 					\`userID\` VARCHAR(20) NOT NULL,
 					\`name\` VARCHAR(30) NOT NULL,
-					\`value\` VARCHAR(255) NOT NULL
+					\`value\` VARCHAR(255) NOT NULL,
+					PRIMARY KEY ( \`uniqueID\` )
 
 				)` );
 
