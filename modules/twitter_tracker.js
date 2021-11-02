@@ -9,16 +9,16 @@ module.exports.streamTwitter = async ( bot ) => {
 
 	// On récupère tous les canaux pour envoyer les messages d'actualités.
 	// Note : ce service est désactivé si aucun salon est trouvé.
+	let cache = bot.channels.cache;
 	let channels = [];
 
-	bot.channels.cache.forEach( channel => {
-
+	for ( const channel of cache.values() )
+	{
 		if ( channel.name.includes( "news" ) || channel.name.includes( "actualités" ) )
 		{
 			channels.push( channel.id );
 		}
-
-	} );
+	};
 
 	if ( channels.length <= 0 )
 		return;
@@ -94,16 +94,15 @@ module.exports.streamTwitter = async ( bot ) => {
 		// On envoie ensuite le message dans les canaux récupérés précédemment.
 		let userInfo = await client.v2.user( eventInfo.data.author_id );
 
-		channels.forEach( identifier => {
-
+		for ( const identifier of channels.values() )
+		{
 			bot.channels.fetch( identifier ).then( channel => {
 
 				channel.send( `https://twitter.com/${ userInfo.data.username }/status/${ eventInfo.data.id } ${ countryFlag }` )
 					.catch( console.error );
 
 			} );
-
-		} );
+		};
 
 	} );
 
@@ -111,10 +110,10 @@ module.exports.streamTwitter = async ( bot ) => {
 	const username = bot.user.username;
 	const avatar = bot.user.avatarURL();
 
-	stream.on( ETwitterStreamEvent.ConnectionError, error =>
+	stream.on( ETwitterStreamEvent.ConnectionError, ( error ) => {
 
-		channels.forEach( identifier => {
-
+		for ( const identifier of channels.values() )
+		{
 			bot.channels.fetch( identifier ).then( channel => {
 
 				const messageEmbed = new discord.MessageEmbed()
@@ -128,16 +127,15 @@ module.exports.streamTwitter = async ( bot ) => {
 					.catch( console.error );
 
 			} );
+		};
 
-		} )
-
-	);
+	} );
 
 	// On affiche une notification dans tous les canaux d'actualités si la connexion se perd.
-	stream.on( ETwitterStreamEvent.ConnectionClosed, () =>
+	stream.on( ETwitterStreamEvent.ConnectionClosed, () => {
 
-		channels.forEach( identifier => {
-
+		for ( const identifier of channels.values() )
+		{
 			bot.channels.fetch( identifier ).then( channel => {
 
 				const messageEmbed = new discord.MessageEmbed()
@@ -150,9 +148,8 @@ module.exports.streamTwitter = async ( bot ) => {
 					.catch( console.error );
 
 			} );
+		};
 
-		} )
-
-	);
+	} );
 
 };
