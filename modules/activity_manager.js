@@ -16,39 +16,35 @@ const activities = [
 	"LGBT is not okay, heterosexuality is natural law"
 ];
 
-module.exports = {
-
+module.exports =
+{
 	// Définition de l'activité.
-	setActivity: ( bot, name, type = "PLAYING" ) => {
-
+	setActivity: ( bot, name, type = "PLAYING" ) =>
+	{
 		// On définit d'abord l'activité personnalisée.
 		bot.user.setActivity( name, {
 			type: type
 		} );
 
 		// On envoie ensuite une notification dans le canal de débogage.
-		bot.channels.fetch( masterChannel ).then( channel => {
-
+		bot.channels.fetch( masterChannel ).then( channel =>
+		{
 			const messageEmbed = new discord.MessageEmbed()
 				.setColor( blueColor )
 				.setAuthor( bot.user.username, bot.user.avatarURL() )
 				.setTitle( "Nouvelle activité" )
 				.setDescription( `« ${ name } ».` );
 
-			channel.send( { embeds: [messageEmbed] } )
+			channel.send( { embeds: [ messageEmbed ] } )
 				.catch( console.error );
-
 		} );
-
 	},
 
 	// Randomisation de l'activité.
-	randomActivity: ( bot ) => {
-
+	randomActivity: ( bot ) =>
+	{
 		let index = Math.floor( Math.random() * ( activities.length - 1 ) + 1 );
 
-		module.exports.setActivity( bot, activities[index] );
-
+		module.exports.setActivity( bot, activities[ index ] );
 	}
-
 };

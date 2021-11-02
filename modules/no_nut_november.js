@@ -7,11 +7,11 @@ const { setSaveData } = require( "./sql_database.js" );
 let days = new Date().getDate() - 1;
 let users = [];
 
-module.exports = {
-
+module.exports =
+{
 	// Création du message d'informations des jours passés.
-	createMessage: ( bot ) => {
-
+	createMessage: ( bot ) =>
+	{
 		// On recherche tous les canaux de l'événement avant d'afficher ou d'éditer le message.
 		// Note : on coupe l'exécution du script si aucun salon n'est trouvé.
 		let cache = bot.channels.cache;
@@ -25,7 +25,7 @@ module.exports = {
 			{
 				channels.push( channel.id );
 			}
-		};
+		}
 
 		if ( channels.length <= 0 )
 			return;
@@ -46,22 +46,22 @@ module.exports = {
 			if ( excluders.includes( user.id ) )
 				return;
 
-			phrase += `- __${ user.username }__ : J+${ users[user.id] || 0 }\n`;
-		};
+			phrase += `- __${ user.username }__ : J+${ users[ user.id ] || 0 }\n`;
+		}
 
 		phrase += "\n**Ces valeurs sont actualisées tous les jours à minuit.** :point_up_2:";
 
 		// On itére à travers tous les salons en mémoire.
 		for ( const identifier of channels.values() )
 		{
-			bot.channels.fetch( identifier ).then( channel => {
-
+			bot.channels.fetch( identifier ).then( channel =>
+			{
 				// On récupère un certain nombre de messages provenant du canal.
 				// Note : on limite la recherche des messages à un nombre de 10 pour éviter d'aller trop loin.
 				let edited = false;
 
-				channel.messages.fetch( { limit: 10 } ).then( messages => {
-
+				channel.messages.fetch( { limit: 10 } ).then( messages =>
+				{
 					// On vérifie alors si l'un des messages parle de l'événement et qu'il a été créé par le bot.
 					for ( const message of messages.values() )
 					{
@@ -76,8 +76,7 @@ module.exports = {
 
 							break;
 						}
-
-					};
+					}
 
 					// Dans le cas contraire, on envoie ensuite un nouveau message.
 					if ( !edited )
@@ -86,21 +85,18 @@ module.exports = {
 							.catch( console.error );
 					}
 
-					// On envoie enfin un @everyone fantôme pour prévenir que le message à été mis à jour.
+					// On envoie enfin (si nécessaire) un @everyone pour prévenir que le message à été mis à jour.
 					channel.send( "@everyone" )
 						.then( message => setTimeout( () => message.delete(), 100 ) )
 						.catch( console.error );
-
-				} )
-
+				} );
 			} );
-		};
-
+		}
 	},
 
 	// Compteur interne du nombre de jours passés.
-	updateCount: async ( bot, reaction, user, type ) => {
-
+	updateCount: async ( bot, reaction, user, type ) =>
+	{
 		// On vérifie si ce n'est pas le bot qui ajoute une réaction et/ou s'il ne s'agit pas du message actuel.
 		if ( reaction.message.author.id != "468066164036206602" || !reaction.message.content.includes( "No Nut November" ) )
 			return;
@@ -110,20 +106,18 @@ module.exports = {
 			return;
 
 		// On vérifie alors si on doit incrémenter une journée ou non à l'utilisateur.
-		users[user.id] = days;
+		users[ user.id ] = days;
 
 		if ( type == true )
 		{
 			// On évite le spam des réactions pour briser la logique de l'événement.
-			if ( users[user.id] >= days + 1 )
+			if ( users[ user.id ] >= days + 1 )
 				return;
 
-			users[user.id]++;
+			users[ user.id ]++;
 		}
 
 		// On sauvegarde enfin cette information dans la base de données.
-		setSaveData( bot, user.id, "NNN", users[user.id] );
-
+		setSaveData( bot, user.id, "NNN", users[ user.id ] );
 	}
-
-}
+};

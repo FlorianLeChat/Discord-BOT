@@ -7,8 +7,8 @@ const { masterChannel, redColor } = require( "../data/__internal__.json" );
 const prefix = "/"; // Slash Commands
 const cooldowns = new discord.Collection();
 
-module.exports.sendMessage = async ( bot, message ) => {
-
+module.exports.sendMessage = async ( bot, message ) =>
+{
 	// On vérifie si la personne a mentionné un robot.
 	if ( message.mentions.has( bot.user ) && !message.mentions.everyone )
 	{
@@ -95,8 +95,8 @@ module.exports.sendMessage = async ( bot, message ) => {
 		message.reply( `Une erreur interne est survenue lors de l'exécution de la commande « ${ command.name } » :\n${ error.message }.` );
 
 		// Notification au serveur de débogage Discord.
-		bot.channels.fetch( masterChannel ).then( channel => {
-
+		bot.channels.fetch( masterChannel ).then( channel =>
+		{
 			const messageEmbed = new discord.MessageEmbed()
 				.setColor( redColor )
 				.setAuthor( bot.user.username, bot.user.avatarURL() )
@@ -104,10 +104,8 @@ module.exports.sendMessage = async ( bot, message ) => {
 				.setDescription( `Une erreur interne est survenue lors de l'exécution de la commande : « ${ command.name } ».` )
 				.addField( "Message d'erreur :", error.message );
 
-			channel.send( { embeds: [messageEmbed] } )
+			channel.send( { embeds: [ messageEmbed ] } )
 				.catch( console.error );
-
 		} );
 	}
-
 };
