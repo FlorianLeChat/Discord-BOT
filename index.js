@@ -28,7 +28,7 @@ const bot = new discord.Client( {
 const delay = 1000 * 600;
 const { randomActivity } = require( "./modules/activity_manager.js" );
 
-bot.on( "ready", () => {
+bot.once( "ready", () => {
 
 	randomActivity( bot );
 
@@ -47,7 +47,7 @@ bot.commands = new discord.Collection();
 
 const { createCommands } = require( "./modules/commands_loader.js" );
 
-bot.on( "ready", () => {
+bot.once( "ready", () => {
 
 	createCommands( bot );
 
@@ -61,6 +61,7 @@ const { sendMessage } = require( "./modules/messages_handler.js" );
 bot.on( "messageCreate", ( message ) => {
 
 	sendMessage( bot, message );
+
 } );
 
 bot.on( "messageUpdate", ( _, newMessage ) => {
@@ -74,7 +75,7 @@ bot.on( "messageUpdate", ( _, newMessage ) => {
 //
 const { streamTwitter } = require( "./modules/twitter_tracker.js" );
 
-bot.on( "ready", () => {
+bot.once( "ready", () => {
 
 	streamTwitter( bot );
 
@@ -86,7 +87,7 @@ bot.on( "ready", () => {
 //
 const { createMessage, updateCount } = require( "./modules/no_nut_november.js" );
 
-bot.on( "ready", () => {
+bot.once( "ready", () => {
 
 	// On vérifie si nous sommes au mois de novembre.
 	let month = new Date().getMonth();
@@ -129,7 +130,7 @@ const settings = require( "./data/__internal__.json" );
 
 bot.login( settings.discordToken );
 
-bot.on( "ready", () => {
+bot.once( "ready", () => {
 
 	bot.channels.fetch( settings.masterChannel ).then( channel => {
 
