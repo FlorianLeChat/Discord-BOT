@@ -13,6 +13,8 @@ const connection = mysql.createConnection( {
 	database: settings.sqlDatabase
 } );
 
+var connected = false;
+
 module.exports =
 {
 	// Connexion à la base de données.
@@ -21,11 +23,13 @@ module.exports =
 		return new Promise( ( resolve, reject ) =>
 		{
 			// On vérifie si la base de données n'est pas déjà connectée.
-			if ( connection.state == "authenticated" )
+			if ( connected )
 			{
 				resolve( "La base de données est déjà connectée." );
 				return;
 			}
+
+			connected = true;
 
 			// Dans le cas contraire, on essaie d'établir la connexion.
 			connection.connect( ( error ) =>
