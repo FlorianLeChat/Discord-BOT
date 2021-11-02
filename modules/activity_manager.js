@@ -35,7 +35,8 @@ module.exports = {
 				.setTitle( "Nouvelle activité" )
 				.setDescription( `« ${ name } ».` );
 
-			channel.send( { embeds: [messageEmbed] } );
+			channel.send( { embeds: [messageEmbed] } )
+				.catch( console.error );
 
 		} );
 

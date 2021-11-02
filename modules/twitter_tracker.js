@@ -98,7 +98,8 @@ module.exports.streamTwitter = async ( bot ) => {
 
 			bot.channels.fetch( identifier ).then( channel => {
 
-				channel.send( `https://twitter.com/${ userInfo.data.username }/status/${ eventInfo.data.id } ${ countryFlag }` );
+				channel.send( `https://twitter.com/${ userInfo.data.username }/status/${ eventInfo.data.id } ${ countryFlag }` )
+					.catch( console.error );
 
 			} );
 
@@ -123,7 +124,8 @@ module.exports.streamTwitter = async ( bot ) => {
 					.setDescription( "Une erreur de connexion s'est produite avec les serveurs Twitter." )
 					.addField( "Message d'erreur :", error.message );
 
-				channel.send( { embeds: [messageEmbed] } );
+				channel.send( { embeds: [messageEmbed] } )
+					.catch( console.error );
 
 			} );
 
@@ -144,7 +146,8 @@ module.exports.streamTwitter = async ( bot ) => {
 					.setTitle( "Erreur API" )
 					.setDescription( "La connexion entre le robot et les serveurs Twitter a été interrompue." );
 
-				channel.send( { embeds: [messageEmbed] } );
+				channel.send( { embeds: [messageEmbed] } )
+					.catch( console.error );
 
 			} );
 

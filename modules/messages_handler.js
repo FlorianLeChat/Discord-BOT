@@ -104,7 +104,8 @@ module.exports.sendMessage = async ( bot, message ) => {
 				.setDescription( `Une erreur interne est survenue lors de l'exécution de la commande : « ${ command.name } ».` )
 				.addField( "Message d'erreur :", error.message );
 
-			channel.send( { embeds: [messageEmbed] } );
+			channel.send( { embeds: [messageEmbed] } )
+				.catch( console.error );
 
 		} );
 	}

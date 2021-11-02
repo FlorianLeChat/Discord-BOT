@@ -23,7 +23,8 @@ module.exports.createCommands = async ( bot ) => {
 					.setDescription( "Une erreur interne s'est produite lors de la récupération des commandes." )
 					.addField( "Message d'erreur :", error.message );
 
-				channel.send( { embeds: [messageEmbed] } );
+				channel.send( { embeds: [messageEmbed] } )
+					.catch( console.error );
 
 			} );
 
@@ -54,7 +55,8 @@ module.exports.createCommands = async ( bot ) => {
 				.setTitle( "Chargement des commandes" )
 				.setDescription( `${ commands.length } commandes ont été chargées.` );
 
-			channel.send( { embeds: [messageEmbed] } );
+			channel.send( { embeds: [messageEmbed] } )
+				.catch( console.error );
 
 		} );
 
