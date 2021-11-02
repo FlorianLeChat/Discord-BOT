@@ -224,7 +224,7 @@ module.exports =
 				}
 
 				// Dans le cas contraire, on résout la promesse avec les informations retournées.
-				resolve( results.length <= 0 && fallback || results[ 0 ].value );
+				resolve( results.length <= 0 ? fallback : results[ 0 ].value );
 			} );
 		} );
 	}
