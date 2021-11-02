@@ -5,8 +5,8 @@
 const { ETwitterStreamEvent, TwitterApi } = require( "twitter-api-v2" );
 const { twitterToken, redColor, orangeColor } = require( "../data/__internal__.json" );
 
-module.exports.streamTwitter = async ( bot ) => {
-
+module.exports.streamTwitter = async ( bot ) =>
+{
 	// On récupère tous les canaux pour envoyer les messages d'actualités.
 	// Note : ce service est désactivé si aucun salon est trouvé.
 	let cache = bot.channels.cache;
@@ -18,7 +18,7 @@ module.exports.streamTwitter = async ( bot ) => {
 		{
 			channels.push( channel.id );
 		}
-	};
+	}
 
 	if ( channels.length <= 0 )
 		return;
@@ -55,13 +55,13 @@ module.exports.streamTwitter = async ( bot ) => {
 
 	// On lance la recherche des tweets en indiquant les données que l'API doit nous retourner.
 	const stream = await client.v2.searchStream( {
-		"tweet.fields": ["author_id"]
+		"tweet.fields": [ "author_id" ]
 	} );
 
 	stream.autoReconnect = true;
 
-	stream.on( ETwitterStreamEvent.Data, async ( eventInfo ) => {
-
+	stream.on( ETwitterStreamEvent.Data, async ( eventInfo ) =>
+	{
 		// On vérifie que le tweet n'est pas un RT.
 		if ( eventInfo.data.text.startsWith( "RT @" ) )
 			return;
@@ -96,26 +96,24 @@ module.exports.streamTwitter = async ( bot ) => {
 
 		for ( const identifier of channels.values() )
 		{
-			bot.channels.fetch( identifier ).then( channel => {
-
+			bot.channels.fetch( identifier ).then( channel =>
+			{
 				channel.send( `https://twitter.com/${ userInfo.data.username }/status/${ eventInfo.data.id } ${ countryFlag }` )
 					.catch( console.error );
-
 			} );
-		};
-
+		}
 	} );
 
 	// On affiche une notification dans tous les canaux d'actualités si une erreur de connexion se produit.
 	const username = bot.user.username;
 	const avatar = bot.user.avatarURL();
 
-	stream.on( ETwitterStreamEvent.ConnectionError, ( error ) => {
-
+	stream.on( ETwitterStreamEvent.ConnectionError, ( error ) =>
+	{
 		for ( const identifier of channels.values() )
 		{
-			bot.channels.fetch( identifier ).then( channel => {
-
+			bot.channels.fetch( identifier ).then( channel =>
+			{
 				const messageEmbed = new discord.MessageEmbed()
 					.setColor( orangeColor )
 					.setAuthor( username, avatar )
@@ -123,33 +121,28 @@ module.exports.streamTwitter = async ( bot ) => {
 					.setDescription( "Une erreur de connexion s'est produite avec les serveurs Twitter." )
 					.addField( "Message d'erreur :", error.message );
 
-				channel.send( { embeds: [messageEmbed] } )
+				channel.send( { embeds: [ messageEmbed ] } )
 					.catch( console.error );
-
 			} );
-		};
-
+		}
 	} );
 
 	// On affiche une notification dans tous les canaux d'actualités si la connexion se perd.
-	stream.on( ETwitterStreamEvent.ConnectionClosed, () => {
-
+	stream.on( ETwitterStreamEvent.ConnectionClosed, () =>
+	{
 		for ( const identifier of channels.values() )
 		{
-			bot.channels.fetch( identifier ).then( channel => {
-
+			bot.channels.fetch( identifier ).then( channel =>
+			{
 				const messageEmbed = new discord.MessageEmbed()
 					.setColor( redColor )
 					.setAuthor( username, avatar )
 					.setTitle( "Erreur API" )
 					.setDescription( "La connexion entre le robot et les serveurs Twitter a été interrompue." );
 
-				channel.send( { embeds: [messageEmbed] } )
+				channel.send( { embeds: [ messageEmbed ] } )
 					.catch( console.error );
-
 			} );
-		};
-
+		}
 	} );
-
 };

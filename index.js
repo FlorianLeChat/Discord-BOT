@@ -28,16 +28,14 @@ const bot = new discord.Client( {
 const delay = 1000 * 600;
 const { randomActivity } = require( "./modules/activity_manager.js" );
 
-bot.once( "ready", () => {
-
+bot.once( "ready", () =>
+{
 	randomActivity( bot );
 
-	setInterval( () => {
-
+	setInterval( () =>
+	{
 		randomActivity( bot );
-
 	}, delay );
-
 } );
 
 //
@@ -47,10 +45,9 @@ bot.commands = new discord.Collection();
 
 const { createCommands } = require( "./modules/commands_loader.js" );
 
-bot.once( "ready", () => {
-
+bot.once( "ready", () =>
+{
 	createCommands( bot );
-
 } );
 
 //
@@ -58,16 +55,14 @@ bot.once( "ready", () => {
 //
 const { sendMessage } = require( "./modules/messages_handler.js" );
 
-bot.on( "messageCreate", ( message ) => {
-
+bot.on( "messageCreate", ( message ) =>
+{
 	sendMessage( bot, message );
-
 } );
 
-bot.on( "messageUpdate", ( _, newMessage ) => {
-
+bot.on( "messageUpdate", ( _, newMessage ) =>
+{
 	sendMessage( bot, newMessage );
-
 } );
 
 //
@@ -75,10 +70,9 @@ bot.on( "messageUpdate", ( _, newMessage ) => {
 //
 const { streamTwitter } = require( "./modules/twitter_tracker.js" );
 
-bot.once( "ready", () => {
-
+bot.once( "ready", () =>
+{
 	streamTwitter( bot );
-
 } );
 
 //
@@ -87,8 +81,8 @@ bot.once( "ready", () => {
 //
 const { createMessage, updateCount } = require( "./modules/no_nut_november.js" );
 
-bot.once( "ready", () => {
-
+bot.once( "ready", () =>
+{
 	// On vérifie si nous sommes au mois de novembre.
 	let month = new Date().getMonth();
 
@@ -99,28 +93,27 @@ bot.once( "ready", () => {
 	createMessage( bot );
 
 	// On réalise enfin cette tâche tous les soirs à minuit.
-	setInterval( () => {
-
+	setInterval( () =>
+	{
 		let timestamp = new Date();
 		timestamp = timestamp.getHours() + ":" + timestamp.getMinutes() + ":" + timestamp.getSeconds();
 
 		if ( timestamp == "0:0:0" )
+		{
 			createMessage( bot );
-
+		}
 	}, 1000 );
 
 } );
 
-bot.on( "messageReactionAdd", ( reaction, user ) => {
-
+bot.on( "messageReactionAdd", ( reaction, user ) =>
+{
 	updateCount( bot, reaction, user, true );
-
 } );
 
-bot.on( "messageReactionRemove", ( reaction, user ) => {
-
+bot.on( "messageReactionRemove", ( reaction, user ) =>
+{
 	updateCount( bot, reaction, user, false );
-
 } );
 
 //
@@ -130,10 +123,10 @@ const settings = require( "./data/__internal__.json" );
 
 bot.login( settings.discordToken );
 
-bot.once( "ready", () => {
-
-	bot.channels.fetch( settings.masterChannel ).then( channel => {
-
+bot.once( "ready", () =>
+{
+	bot.channels.fetch( settings.masterChannel ).then( channel =>
+	{
 		const messageEmbed = new discord.MessageEmbed()
 			.setColor( settings.greenColor )
 			.setAuthor( bot.user.username, bot.user.avatarURL() )
@@ -141,9 +134,7 @@ bot.once( "ready", () => {
 			.setDescription( `Le robot « ${ bot.user.username } » a démarré avec succès.` )
 			.addField( "Serveurs présents :", bot.guilds.cache.size.toString() );
 
-		channel.send( { embeds: [messageEmbed] } )
+		channel.send( { embeds: [ messageEmbed ] } )
 			.catch( console.error );
-
 	} );
-
 } );
