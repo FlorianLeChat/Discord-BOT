@@ -4,7 +4,7 @@
 const discord = require( "discord.js" );
 const bot = new discord.Client( {
 
-	// GUILS + GUID_MEMBERS + GUILD_BANS + GUILD_MESSAGES + DIRECT_MESSAGES
+	// GUILDS + GUILD_MEMBERS + GUILD_BANS + GUILD_MESSAGES + DIRECT_MESSAGES
 	// + GUILD_MESSAGE_REACTIONS
 	// https://discord.com/developers/docs/topics/gateway#list-of-intents
 	intents: new discord.Intents( 5639 ),
