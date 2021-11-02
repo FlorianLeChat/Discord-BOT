@@ -37,13 +37,12 @@ module.exports.createCommands = async ( bot ) => {
 		if ( commands.length > 0 )
 		{
 			// On itére ensuite à travers tous les fichiers pour les ajouter.
-			commands.forEach( file => {
+			// for ( const file of commands.values() )
+			// {
+			// 	const command = require(`../commands/${file}`)
 
-				// const command = require(`../commands/${file}`)
-
-				// bot.commands.set(command.name, command)
-
-			} );
+			// 	bot.commands.set(command.name, command)
+			// };
 		}
 
 		// On envoie enfin une notification au Discord de débogage.
