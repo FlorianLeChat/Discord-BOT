@@ -2,6 +2,7 @@
 // Suivi de certaines actualités Twitter.
 // Source : https://www.npmjs.com/package/twitter-api-v2
 //
+const discord = require( "discord.js" );
 const { ETwitterStreamEvent, TwitterApi } = require( "twitter-api-v2" );
 const { twitterToken, redColor, orangeColor } = require( "../data/__internal__.json" );
 
