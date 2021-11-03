@@ -55,9 +55,42 @@ module.exports.streamTwitter = async ( bot ) =>
 	} );
 
 	// On lance la recherche des tweets en indiquant les données que l'API doit nous retourner.
-	const stream = await client.v2.searchStream( {
-		"tweet.fields": [ "author_id" ]
-	} );
+	let stream;
+
+	try
+	{
+		// Tentative de définition des règles.
+		stream = await client.v2.searchStream( {
+			"tweet.fields": [ "author_id" ]
+		} );
+	}
+	catch ( error )
+	{
+		// En cas d'échec, on regarde le code d'erreur.
+		if ( error.code == 429 )
+		{
+			// Le code 429 signifie qu'on a réalisé trop de requête.
+			// On regarde donc le temps avant la réinitialisation de cette limitation.
+			// À la fin du temps d'attente, on exécute de nouveau la fonction.
+			const timestamp = new Date().getTime();
+
+			let reset = error?.rateLimit?.reset;
+			reset = isNaN( reset ) ? 0 : reset;
+
+			setTimeout( () =>
+			{
+				if ( timestamp < reset )
+					module.exports.streamTwitter( bot );
+			}, 60 );
+		}
+		else
+		{
+			// Pour les autres cas, on exécute juste de nouveau la fonction.
+			module.exports.streamTwitter( bot );
+		}
+
+		return;
+	}
 
 	stream.autoReconnect = true;
 
