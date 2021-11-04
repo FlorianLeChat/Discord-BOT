@@ -72,21 +72,25 @@ module.exports.streamTwitter = async ( bot ) =>
 			// Le code 429 signifie qu'on a réalisé trop de requête.
 			// On regarde donc le temps avant la réinitialisation de cette limitation.
 			// À la fin du temps d'attente, on exécute de nouveau la fonction.
+			// Source : https://github.com/PLhery/node-twitter-api-v2/issues/92
 			const timestamp = new Date().getTime();
 
-			let reset = error?.rateLimit?.reset;
+			let reset = error.rateLimit?.reset;
 			reset = isNaN( reset ) ? 0 : reset;
 
 			setTimeout( () =>
 			{
 				if ( timestamp < reset )
 					module.exports.streamTwitter( bot );
-			}, 60 );
+			}, 60000 );
 		}
 		else
 		{
-			// Pour les autres cas, on exécute juste de nouveau la fonction.
-			module.exports.streamTwitter( bot );
+			// Pour les autres cas, on exécute juste de nouveau la fonction après quelques minutes.
+			setTimeout( () =>
+			{
+				module.exports.streamTwitter( bot );
+			}, Math.random( 60, 300 ) * 1000 );
 		}
 
 		return;
@@ -97,7 +101,7 @@ module.exports.streamTwitter = async ( bot ) =>
 	stream.on( ETwitterStreamEvent.Data, async ( eventInfo ) =>
 	{
 		// On vérifie que le tweet n'est pas un RT.
-		if ( eventInfo.data.text.startsWith( "RT @" ) )
+		if ( eventInfo.data.text?.startsWith( "RT @" ) ?? true )
 			return;
 
 		// On vérifie alors la nationalité du compte.
