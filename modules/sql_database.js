@@ -233,3 +233,9 @@ module.exports =
 		} );
 	}
 };
+
+connection.on( "error", ( error ) =>
+{
+	// Prise en charge des erreurs internes (base de données SQL).
+	console.error( "La liaison SQL a rencontrée une erreur interne :", error );
+} );
