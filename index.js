@@ -138,3 +138,9 @@ bot.once( "ready", () =>
 			.catch( console.error );
 	} );
 } );
+
+bot.on( "error", ( error ) =>
+{
+	// Prise en charge des erreurs internes (Discord/Node JS).
+	console.error( "Le robot a rencontré une erreur interne :", error );
+} );
