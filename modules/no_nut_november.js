@@ -2,6 +2,7 @@
 // Événement du "No Nut November".
 //
 const excluders = [];
+const { sleep } = require( "../utils/functions.js" );
 const { setSaveData, getSaveData } = require( "./sql_database.js" );
 
 let days = 0;
@@ -75,6 +76,8 @@ module.exports =
 		}
 
 		phrase += "\n:rotating_light: **Les valeurs ci-dessous sont actualisées tous les jours à minuit.** :rotating_light:\n\n";
+
+		await sleep( 3000 ); // Attente nécessaire pour la base de données.
 
 		// On itére après à travers tous les salons en mémoire.
 		for ( const identifier of channels.values() )
