@@ -76,6 +76,25 @@ bot.once( "ready", () =>
 } );
 
 //
+// Initialisation de la liaison avec la base de données.
+// Note : on en profite pour créer la table globale des données.
+//
+const { query } = require( "./modules/sql_database.js" );
+
+bot.once( "ready", () =>
+{
+	query( bot, `CREATE TABLE IF NOT EXISTS \`global_data\` (
+
+		\`uniqueID\` INT NOT NULL AUTO_INCREMENT,
+		\`userID\` VARCHAR(20) NOT NULL,
+		\`name\` VARCHAR(30) NOT NULL,
+		\`value\` VARCHAR(255) NOT NULL,
+		PRIMARY KEY ( \`uniqueID\` )
+
+	)` );
+} );
+
+//
 // Exécution de l'événement du "No Nut November".
 // Note : fonctionne seulement durant le mois de novembre.
 //
