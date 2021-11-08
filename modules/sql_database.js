@@ -6,7 +6,7 @@ const mysql = require( "mysql" );
 const discord = require( "discord.js" );
 const settings = require( "../data/__internal__.json" );
 
-const connection = mysql.createConnection( {
+const pool = mysql.createPool( {
 	host: settings.sqlHost,
 	user: settings.sqlUser,
 	password: settings.sqlPassword,
@@ -15,99 +15,14 @@ const connection = mysql.createConnection( {
 
 module.exports =
 {
-	// Connexion à la base de données.
-	connect: () =>
+	// Requête vers la base de données.
+	query: ( bot, query ) =>
 	{
-		return new Promise( ( resolve, reject ) =>
+		return new Promise( ( resolve ) =>
 		{
-			// On vérifie si la base de données n'est pas déjà connectée.
-			if ( connection.threadId != null )
-			{
-				resolve( "La base de données est déjà connectée." );
-				return;
-			}
-
-			// Dans le cas contraire, on essaie d'établir la connexion.
-			connection.connect( ( error ) =>
+			pool.query( query, function ( error, results )
 			{
 				// On vérifie si la connexion a réussie.
-				if ( error )
-				{
-					reject( `Impossible de se connecter à la base de données SQL. Code d'erreur : ${ error.code }` );
-					return;
-				}
-
-				// On créé alors la table des données globales.
-				connection.query( `CREATE TABLE IF NOT EXISTS \`global_data\` (
-
-					\`uniqueID\` INT NOT NULL AUTO_INCREMENT,
-					\`userID\` VARCHAR(20) NOT NULL,
-					\`name\` VARCHAR(30) NOT NULL,
-					\`value\` VARCHAR(255) NOT NULL,
-					PRIMARY KEY ( \`uniqueID\` )
-
-				)` );
-
-				// On affiche enfin le message de connexion avec l'identifiant associé.
-				resolve( `Connexion réussie à la base de données, ID : ${ connection.threadId }.` );
-			} );
-		} );
-	},
-
-	// Définition d'une valeur sauvegardée.
-	setSaveData: ( bot, id, name, value ) =>
-	{
-		return new Promise( async () =>
-		{
-			// On vérifie si la connexion avec la base de données est déjà établie.
-			// Note : on envoie alors une notification dans un Discord de débogage.
-			await module.exports.connect()
-				.then( message =>
-				{
-					// Information
-					bot.channels.fetch( settings.masterChannel ).then( channel =>
-					{
-						const messageEmbed = new discord.MessageEmbed()
-							.setColor( settings.blueColor )
-							.setAuthor( bot.user.username, bot.user.avatarURL() )
-							.setTitle( "Informations SQL" )
-							.setDescription( message );
-
-						channel.send( { embeds: [ messageEmbed ] } )
-							.catch( console.error );
-					} );
-				} )
-				.catch( error =>
-				{
-					// Erreur
-					bot.channels.fetch( settings.masterChannel ).then( channel =>
-					{
-						const messageEmbed = new discord.MessageEmbed()
-							.setColor( settings.redColor )
-							.setAuthor( bot.user.username, bot.user.avatarURL() )
-							.setTitle( "Erreur SQL" )
-							.setDescription( error );
-
-						channel.send( { embeds: [ messageEmbed ] } )
-							.catch( console.error );
-					} );
-
-					return;
-				} );
-
-			// On rend ensuite valide les arguments renseignés.
-			id = connection.escape( id );
-			name = connection.escape( name );
-			value = connection.escape( value );
-
-			// On fait une première requête SQL pour vérifier si une valeur est déjà présente.
-			const selectQuery = `
-				SELECT \`value\` FROM \`global_data\`
-				WHERE \`userID\` = ${ id } AND \`name\` = ${ name }`;
-
-			connection.query( selectQuery, ( error, results ) =>
-			{
-				// On envoie une notification d'erreur si la requête échoue.
 				if ( error )
 				{
 					bot.channels.fetch( settings.masterChannel ).then( channel =>
@@ -122,23 +37,44 @@ module.exports =
 						channel.send( { embeds: [ messageEmbed ] } )
 							.catch( console.error );
 					} );
+				};
 
-					return;
-				}
+				// Si c'est le cas, on retourne le résultat.
+				resolve( results );
+			} );
+		} );
+	},
 
-				// Dans le cas contraire, on vérifie le nombre de résultats.
+	// Définition d'une valeur sauvegardée.
+	setSaveData: ( bot, id, name, value ) =>
+	{
+		return new Promise( async () =>
+		{
+			// On rend d'abord valide les arguments renseignés.
+			id = pool.escape( id );
+			name = pool.escape( name );
+			value = pool.escape( value );
+
+			// On réalise ensuite une première requête SQL pour vérifier si une valeur est déjà présente.
+			const selectQuery = `
+				SELECT \`value\` FROM \`global_data\`
+				WHERE \`userID\` = ${ id } AND \`name\` = ${ name }`;
+
+			module.exports.query( bot, selectQuery, ( results ) =>
+			{
+				// On vérifie alors le nombre de résultats.
 				if ( results.length <= 0 )
 				{
-					// Ajout d'une nouvelle entrée.
-					connection.query( `
+					// Il n'y a pas d'entrée, on en ajoute une nouvelle.
+					module.exports.query( bot, `
 						INSERT INTO \`global_data\` (\`userID\`, \`name\`, \`value\`)
 						VALUES (${ id }, ${ name }, ${ value })
 					` );
 				}
 				else
 				{
-					// Actualisation d'une entrée existante.
-					connection.query( `
+					// Dans le cas contraire, on actualise l'entrée actuelle.
+					module.exports.query( bot, `
 						UPDATE \`global_data\` SET \`value\` = ${ value }
 						WHERE \`userID\` = ${ id } AND \`name\` = ${ name }
 					` );
@@ -152,85 +88,24 @@ module.exports =
 	{
 		return new Promise( async ( resolve ) =>
 		{
-			// On vérifie si la connexion avec la base de données est déjà établie.
-			// Note : on envoie alors une notification dans un Discord de débogage.
-			await module.exports.connect()
-				.then( message =>
-				{
-					// Information
-					bot.channels.fetch( settings.masterChannel ).then( channel =>
-					{
-						const messageEmbed = new discord.MessageEmbed()
-							.setColor( settings.blueColor )
-							.setAuthor( bot.user.username, bot.user.avatarURL() )
-							.setTitle( "Informations SQL" )
-							.setDescription( message );
+			// On rend d'abord valide les arguments renseignés.
+			id = pool.escape( id );
+			name = pool.escape( name );
 
-						channel.send( { embeds: [ messageEmbed ] } )
-							.catch( console.error );
-					} );
-				} )
-				.catch( error =>
-				{
-					// Erreur
-					bot.channels.fetch( settings.masterChannel ).then( channel =>
-					{
-						const messageEmbed = new discord.MessageEmbed()
-							.setColor( settings.redColor )
-							.setAuthor( bot.user.username, bot.user.avatarURL() )
-							.setTitle( "Erreur SQL" )
-							.setDescription( error );
-
-						channel.send( { embeds: [ messageEmbed ] } )
-							.catch( console.error );
-					} );
-
-					resolve( fallback );
-
-					return;
-				} );
-
-			// On rend ensuite valide les arguments renseignés.
-			id = connection.escape( id );
-			name = connection.escape( name );
-
-			// On effectue enfin une requête pour obtenir la valeur.
+			// On effectue alors une requête pour obtenir la valeur.
 			const selectQuery = `
 				SELECT \`value\` FROM \`global_data\`
 				WHERE \`userID\` = ${ id } AND \`name\` = ${ name }`;
 
-			connection.query( selectQuery, ( error, results ) =>
+			module.exports.query( bot, selectQuery ).then( results =>
 			{
-				// On vérifie si le résultat n'est pas une erreur.
-				// Note : on en profite aussi pour envoyer une notification sur un Discord de débogage.
-				if ( error )
-				{
-					bot.channels.fetch( settings.masterChannel ).then( channel =>
-					{
-						const messageEmbed = new discord.MessageEmbed()
-							.setColor( settings.redColor )
-							.setAuthor( bot.user.username, bot.user.avatarURL() )
-							.setTitle( "Erreur SQL" )
-							.setDescription( "Requête lors de la requête SQL." )
-							.addField( "Code d'erreur :", error.code );
-
-						channel.send( { embeds: [ messageEmbed ] } )
-							.catch( console.error );
-					} );
-
-					resolve( fallback );
-
-					return;
-				}
-
-				// Dans le cas contraire, on résout la promesse avec les informations retournées.
 				resolve( results.length <= 0 ? fallback : results[ 0 ].value );
-			} );
+			} )
 		} );
 	}
 };
 
-connection.on( "error", ( error ) =>
+pool.on( "error", ( error ) =>
 {
 	// Prise en charge des erreurs internes (base de données SQL).
 	console.error( "La liaison SQL a rencontrée une erreur interne :", error );
