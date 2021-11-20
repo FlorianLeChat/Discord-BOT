@@ -4,7 +4,7 @@
 const discord = require( "discord.js" );
 const { masterChannel, redColor } = require( "../data/__internal__.json" );
 
-const prefix = "/"; // Slash Commands
+const prefix = "/";
 const cooldowns = new discord.Collection();
 
 module.exports.sendMessage = async ( bot, message ) =>
@@ -23,11 +23,11 @@ module.exports.sendMessage = async ( bot, message ) =>
 	// On regarde si on doit répondre automatiquement
 	let content = message.content.toLowerCase();
 
-	if ( content.includes( "bonjour" ) || content.includes( "coucou" ) || content.includes( "salut" ) )
+	if ( content.startsWith( "bonjour" ) || content.startsWith( "coucou" ) || content.startsWith( "salut" ) )
 		return message.reply( "Bonjour à toi, jeune entrepreneur !" );
 
 	// On vérifie si on tente d'utiliser une commande.
-	if ( !message.content.startsWith( prefix ) )
+	if ( !content.startsWith( prefix ) )
 		return;
 
 	// On vérifie si la commande (ou son alias) existe.
