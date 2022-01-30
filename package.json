@@ -9,10 +9,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "discord.js": "^13.3.1",
-    "iso-639-1": "^2.1.10",
+    "discord.js": "^13.6.0",
+    "iso-639-1": "^2.1.12",
     "moment": "^2.29.1",
     "mysql": "^2.18.1",
-    "twitter-api-v2": "^1.6.5"
+    "pm2": "^5.1.2",
+    "twitter-api-v2": "^1.10.0"
   }
 }
