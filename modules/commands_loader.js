@@ -18,7 +18,7 @@ module.exports.createCommands = async ( bot ) =>
 			{
 				const messageEmbed = new discord.MessageEmbed()
 					.setColor( settings.redColor )
-					.setAuthor( bot.user.username, bot.user.avatarURL() )
+					.setAuthor( { name: bot.user.username, iconURL: bot.user.avatarURL() } )
 					.setTitle( "Erreur du système de fichiers" )
 					.setDescription( "Une erreur interne s'est produite lors de la récupération des commandes." )
 					.addField( "Message d'erreur :", error.message );
@@ -49,7 +49,7 @@ module.exports.createCommands = async ( bot ) =>
 		{
 			const messageEmbed = new discord.MessageEmbed()
 				.setColor( settings.greenColor )
-				.setAuthor( bot.user.username, bot.user.avatarURL() )
+				.setAuthor( { name: bot.user.username, iconURL: bot.user.avatarURL() } )
 				.setTitle( "Chargement des commandes" )
 				.setDescription( `${ commands.length } commandes ont été chargées.` );
 
