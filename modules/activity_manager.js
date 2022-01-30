@@ -31,7 +31,7 @@ module.exports =
 		{
 			const messageEmbed = new discord.MessageEmbed()
 				.setColor( blueColor )
-				.setAuthor( bot.user.username, bot.user.avatarURL() )
+				.setAuthor( { name: bot.user.username, iconURL: bot.user.avatarURL() } )
 				.setTitle( "Nouvelle activité" )
 				.setDescription( `« ${ name } ».` );
 

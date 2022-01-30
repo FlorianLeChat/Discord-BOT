@@ -154,7 +154,7 @@ module.exports.streamTwitter = async ( bot ) =>
 			{
 				const messageEmbed = new discord.MessageEmbed()
 					.setColor( orangeColor )
-					.setAuthor( username, avatar )
+					.setAuthor( { name: username, iconURL: avatar } )
 					.setTitle( "Erreur API" )
 					.setDescription( "Une erreur de connexion s'est produite avec les serveurs Twitter." )
 					.addField( "Message d'erreur :", error.message );
@@ -174,7 +174,7 @@ module.exports.streamTwitter = async ( bot ) =>
 			{
 				const messageEmbed = new discord.MessageEmbed()
 					.setColor( redColor )
-					.setAuthor( username, avatar )
+					.setAuthor(  { name: username, iconURL: avatar }  )
 					.setTitle( "Erreur API" )
 					.setDescription( "La connexion entre le robot et les serveurs Twitter a été interrompue." );
 

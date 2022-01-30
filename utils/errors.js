@@ -12,7 +12,7 @@ module.exports =
 	{
 		const embed = new discord.MessageEmbed()
 			.setColor( red )
-			.setAuthor( message.author.tag, message.author.avatarURL() )
+			.setAuthor( { name: message.author.tag, iconURL: message.author.avatarURL() } )
 			.setTitle( "Permissions insuffisantes" )
 			.setThumbnail( message.guild.iconURL() )
 			.setDescription( "Il est impossible de faire cette action avec vos permissions actuelles." )
@@ -28,7 +28,7 @@ module.exports =
 	{
 		const embed = new discord.MessageEmbed()
 			.setColor( red )
-			.setAuthor( message.author.tag, message.author.avatarURL() )
+			.setAuthor( { name: message.author.tag, iconURL: message.author.avatarURL() } )
 			.setTitle( "Permissions égales" )
 			.setThumbnail( message.guild.iconURL() )
 			.setDescription( "Il est impossible de faire cette action sur un utilisateur ayant les mêmes permissions que vous." )
@@ -44,7 +44,7 @@ module.exports =
 	{
 		const embed = new discord.MessageEmbed()
 			.setColor( red )
-			.setAuthor( message.author.tag, message.author.avatarURL() )
+			.setAuthor( { name: message.author.tag, iconURL: message.author.avatarURL() } )
 			.setTitle( "MrRobot 1 - 0 Vous" )
 			.setThumbnail( message.guild.iconURL() )
 			.setDescription( "Il est impossible de faire cette action sur un robot." )
@@ -59,7 +59,7 @@ module.exports =
 	{
 		const embed = new discord.MessageEmbed()
 			.setColor( red )
-			.setAuthor( message.author.tag, message.author.avatarURL() )
+			.setAuthor( { name: message.author.tag, iconURL: message.author.avatarURL() } )
 			.setTitle( "wtf" )
 			.setThumbnail( message.guild.iconURL() )
 			.setDescription( "Il est impossible de faire cette action sur vous-même." )
@@ -74,7 +74,7 @@ module.exports =
 	{
 		const embed = new discord.MessageEmbed()
 			.setColor( red )
-			.setAuthor( message.author.tag, message.author.avatarURL() )
+			.setAuthor( { name: message.author.tag, iconURL: message.author.avatarURL() } )
 			.setTitle( "Utilisateur introuvable" )
 			.setThumbnail( message.guild.iconURL() )
 			.setDescription( "Il est impossible de trouver l'utilisateur spécifié." )
@@ -89,7 +89,7 @@ module.exports =
 	{
 		const embed = new discord.MessageEmbed()
 			.setColor( red )
-			.setAuthor( message.author.tag, message.author.avatarURL() )
+			.setAuthor( { name: message.author.tag, iconURL: message.author.avatarURL() } )
 			.setTitle( "Raison manquante" )
 			.setThumbnail( message.guild.iconURL() )
 			.setDescription( "Il est impossible spécifier une raison pour votre action." )
@@ -104,7 +104,7 @@ module.exports =
 	{
 		const embed = new discord.MessageEmbed()
 			.setColor( red )
-			.setAuthor( message.author.tag, message.author.avatarURL() )
+			.setAuthor( { name: message.author.tag, iconURL: message.author.avatarURL() } )
 			.setTitle( "Durée manquante" )
 			.setThumbnail( message.guild.iconURL() )
 			.setDescription( "Il est impossible spécifier une durée (en minutes) pour votre action." )

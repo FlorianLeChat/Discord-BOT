@@ -148,7 +148,7 @@ bot.once( "ready", () =>
 	{
 		const messageEmbed = new discord.MessageEmbed()
 			.setColor( settings.greenColor )
-			.setAuthor( bot.user.username, bot.user.avatarURL() )
+			.setAuthor( { name: bot.user.username, iconURL: bot.user.avatarURL() } )
 			.setTitle( "Démarrage terminé" )
 			.setDescription( `Le robot « ${ bot.user.username } » a démarré avec succès.` )
 			.addField( "Serveurs présents :", bot.guilds.cache.size.toString() );

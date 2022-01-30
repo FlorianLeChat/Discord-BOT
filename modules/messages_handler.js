@@ -99,7 +99,7 @@ module.exports.sendMessage = async ( bot, message ) =>
 		{
 			const messageEmbed = new discord.MessageEmbed()
 				.setColor( redColor )
-				.setAuthor( bot.user.username, bot.user.avatarURL() )
+				.setAuthor( { name: bot.user.username, iconURL: bot.user.avatarURL() } )
 				.setTitle( "Erreur d'exécution d'une commande" )
 				.setDescription( `Une erreur interne est survenue lors de l'exécution de la commande : « ${ command.name } ».` )
 				.addField( "Message d'erreur :", error.message );

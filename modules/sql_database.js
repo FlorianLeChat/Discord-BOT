@@ -29,7 +29,7 @@ module.exports =
 					{
 						const messageEmbed = new discord.MessageEmbed()
 							.setColor( settings.redColor )
-							.setAuthor( bot.user.username, bot.user.avatarURL() )
+							.setAuthor( { name: bot.user.username, iconURL: bot.user.avatarURL() } )
 							.setTitle( "Erreur SQL" )
 							.setDescription( "Requête lors de la requête SQL." )
 							.addField( "Code d'erreur :", error.code );
