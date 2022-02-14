@@ -20,13 +20,9 @@ module.exports.sendMessage = async ( bot, message ) =>
 	if ( message.author.bot || message.channel.type == "dm" )
 		return;
 
-	// On regarde si on doit répondre automatiquement
+	// On vérifie si on tente d'utiliser une commande.
 	let content = message.content.toLowerCase();
 
-	if ( content.startsWith( "bonjour" ) || content.startsWith( "coucou" ) || content.startsWith( "salut" ) )
-		return message.reply( "Bonjour à toi, jeune entrepreneur !" );
-
-	// On vérifie si on tente d'utiliser une commande.
 	if ( !content.startsWith( prefix ) )
 		return;
 
