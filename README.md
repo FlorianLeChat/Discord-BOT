@@ -1,4 +1,4 @@
-# Robot Discord : « Florian Le Chat »
+# 🤖 Robot Discord : « Florian Le Chat »
 
 ## Présentation
 
