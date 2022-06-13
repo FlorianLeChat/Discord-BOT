@@ -1,13 +1,7 @@
 {
-  "name": "discordbot",
-  "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "author": "Florian Trayon",
+  "license": "MIT",
   "dependencies": {
     "discord.js": "^13.7.0",
     "iso-639-1": "^2.1.14",
