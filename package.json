@@ -10,11 +10,11 @@
     "restart": "pm2 restart index.js"
   },
   "dependencies": {
-    "discord.js": "^13.8.1",
-    "iso-639-1": "^2.1.15",
-    "moment": "^2.29.3",
-    "mysql": "^2.18.1",
-    "pm2": "^5.2.0",
-    "twitter-api-v2": "^1.12.2"
+    "pm2": "~5.2",
+    "mysql": "~2.18",
+    "moment": "~2.29",
+    "iso-639-1": "~2.1",
+    "discord.js": "~13.8",
+    "twitter-api-v2": "~1.12"
   }
 }
