@@ -17,7 +17,7 @@ module.exports = {
 
 		const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${languageCode}"&dt=t&q=${phrase}`;
 
-		request(url, function(error, _response, body) {
+		request(url, (error, _response, body) => {
 			if (error)
 			{
 				message.reply("Erreur lors de la traduction du texte.");
