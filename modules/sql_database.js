@@ -20,7 +20,7 @@ module.exports =
 	{
 		return new Promise( ( resolve ) =>
 		{
-			pool.query( query, function ( error, results )
+			pool.query( query, ( error, results ) =>
 			{
 				// On vérifie si la connexion a réussie.
 				if ( error )
