@@ -29,13 +29,13 @@ module.exports =
 		// On envoie ensuite une notification dans le canal de débogage.
 		bot.channels.fetch( masterChannel ).then( channel =>
 		{
-			const messageEmbed = new discord.MessageEmbed()
+			const embedBuilder = new discord.EmbedBuilder()
 				.setColor( blueColor )
-				.setAuthor( { name: bot.user.username, iconURL: bot.user.avatarURL() } )
 				.setTitle( "Nouvelle activité" )
+				.setAuthor( { name: bot.user.username, iconURL: bot.user.avatarURL() } )
 				.setDescription( `« ${ name } ».` );
 
-			channel.send( { embeds: [ messageEmbed ] } )
+			channel.send( { embeds: [ embedBuilder ] } )
 				.catch( console.error );
 		} );
 	},

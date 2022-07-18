@@ -115,14 +115,14 @@ module.exports.streamTwitter = async ( bot ) =>
 		{
 			bot.channels.fetch( identifier ).then( channel =>
 			{
-				const messageEmbed = new discord.MessageEmbed()
+				const embedBuilder = new discord.EmbedBuilder()
 					.setColor( orangeColor )
-					.setAuthor( { name: username, iconURL: avatar } )
 					.setTitle( "Erreur API" )
-					.setDescription( "Une erreur de connexion s'est produite avec les serveurs Twitter." )
-					.addField( "Message d'erreur :", error.message );
+					.setAuthor( { name: username, iconURL: avatar } )
+					.addFields( { name: "Message d'erreur :", value: error.message } )
+					.setDescription( "Une erreur de connexion s'est produite avec les serveurs Twitter." );
 
-				channel.send( { embeds: [ messageEmbed ] } )
+				channel.send( { embeds: [ embedBuilder ] } )
 					.catch( console.error );
 			} );
 		}
@@ -135,13 +135,13 @@ module.exports.streamTwitter = async ( bot ) =>
 		{
 			bot.channels.fetch( identifier ).then( channel =>
 			{
-				const messageEmbed = new discord.MessageEmbed()
+				const embedBuilder = new discord.EmbedBuilder()
 					.setColor( redColor )
-					.setAuthor(  { name: username, iconURL: avatar }  )
 					.setTitle( "Erreur API" )
+					.setAuthor( { name: username, iconURL: avatar } )
 					.setDescription( "La connexion entre le robot et les serveurs Twitter a été interrompue." );
 
-				channel.send( { embeds: [ messageEmbed ] } )
+				channel.send( { embeds: [ embedBuilder ] } )
 					.catch( console.error );
 			} );
 		}
