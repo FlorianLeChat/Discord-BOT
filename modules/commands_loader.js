@@ -16,14 +16,14 @@ module.exports.createCommands = async ( bot ) =>
 		{
 			bot.channels.fetch( settings.masterChannel ).then( channel =>
 			{
-				const messageEmbed = new discord.MessageEmbed()
+				const embedBuilder = new discord.EmbedBuilder()
 					.setColor( settings.redColor )
-					.setAuthor( { name: bot.user.username, iconURL: bot.user.avatarURL() } )
 					.setTitle( "Erreur du système de fichiers" )
-					.setDescription( "Une erreur interne s'est produite lors de la récupération des commandes." )
-					.addField( "Message d'erreur :", error.message );
+					.setAuthor( { name: bot.user.username, iconURL: bot.user.avatarURL() } )
+					.addFields( { name: "Message d'erreur :", value: error.message } )
+					.setDescription( "Une erreur interne s'est produite lors de la récupération des commandes." );
 
-				channel.send( { embeds: [ messageEmbed ] } )
+				channel.send( { embeds: [ embedBuilder ] } )
 					.catch( console.error );
 			} );
 
@@ -47,13 +47,13 @@ module.exports.createCommands = async ( bot ) =>
 		// On envoie enfin une notification au Discord de débogage.
 		bot.channels.fetch( settings.masterChannel ).then( channel =>
 		{
-			const messageEmbed = new discord.MessageEmbed()
+			const embedBuilder = new discord.EmbedBuilder()
 				.setColor( settings.greenColor )
-				.setAuthor( { name: bot.user.username, iconURL: bot.user.avatarURL() } )
 				.setTitle( "Chargement des commandes" )
+				.setAuthor( { name: bot.user.username, iconURL: bot.user.avatarURL() } )
 				.setDescription( `${ commands.length } commandes ont été chargées.` );
 
-			channel.send( { embeds: [ messageEmbed ] } )
+			channel.send( { embeds: [ embedBuilder ] } )
 				.catch( console.error );
 		} );
 	} );

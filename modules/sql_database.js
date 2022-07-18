@@ -27,14 +27,14 @@ module.exports =
 				{
 					bot.channels.fetch( settings.masterChannel ).then( channel =>
 					{
-						const messageEmbed = new discord.MessageEmbed()
+						const embedBuilder = new discord.EmbedBuilder()
 							.setColor( settings.redColor )
-							.setAuthor( { name: bot.user.username, iconURL: bot.user.avatarURL() } )
 							.setTitle( "Erreur SQL" )
-							.setDescription( "Requête lors de la requête SQL." )
-							.addField( "Code d'erreur :", error.code );
+							.setAuthor( { name: bot.user.username, iconURL: bot.user.avatarURL() } )
+							.addFields( { name: "Code d'erreur :", value: error.code } )
+							.setDescription( "Requête lors de la requête SQL." );
 
-						channel.send( { embeds: [ messageEmbed ] } )
+						channel.send( { embeds: [ embedBuilder ] } )
 							.catch( console.error );
 					} );
 				};
@@ -100,7 +100,7 @@ module.exports =
 			module.exports.query( bot, selectQuery ).then( results =>
 			{
 				resolve( results.length <= 0 ? fallback : results[ 0 ].value );
-			} )
+			} );
 		} );
 	}
 };

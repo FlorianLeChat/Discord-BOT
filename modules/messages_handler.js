@@ -90,17 +90,17 @@ module.exports.sendMessage = async ( bot, message ) =>
 		// Message d'erreur à l'auteur de la commande.
 		message.reply( `Une erreur interne est survenue lors de l'exécution de la commande « ${ command.name } » :\n${ error.message }.` );
 
-		// Notification au serveur de débogage Discord.
+		// Notification au serveur de débogage de Discord.
 		bot.channels.fetch( masterChannel ).then( channel =>
 		{
-			const messageEmbed = new discord.MessageEmbed()
+			const embedBuilder = new discord.EmbedBuilder()
 				.setColor( redColor )
-				.setAuthor( { name: bot.user.username, iconURL: bot.user.avatarURL() } )
 				.setTitle( "Erreur d'exécution d'une commande" )
-				.setDescription( `Une erreur interne est survenue lors de l'exécution de la commande : « ${ command.name } ».` )
-				.addField( "Message d'erreur :", error.message );
+				.setAuthor( { name: bot.user.username, iconURL: bot.user.avatarURL() } )
+				.addFields( { name: "Message d'erreur :", value: error.message } )
+				.setDescription( `Une erreur interne est survenue lors de l'exécution de la commande : « ${ command.name } ».` );
 
-			channel.send( { embeds: [ messageEmbed ] } )
+			channel.send( { embeds: [ embedBuilder ] } )
 				.catch( console.error );
 		} );
 	}

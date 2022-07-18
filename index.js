@@ -1,13 +1,18 @@
 //
 // Initialisation du bot.
 //
-const discord = require( "discord.js" );
-const bot = new discord.Client( {
+const { Client, Collection, GatewayIntentBits, EmbedBuilder } = require( "discord.js" );
+const bot = new Client( {
 
-	// GUILDS + GUILD_MEMBERS + GUILD_BANS + GUILD_MESSAGES + DIRECT_MESSAGES
-	// + GUILD_MESSAGE_REACTIONS
 	// https://discord.com/developers/docs/topics/gateway#list-of-intents
-	intents: new discord.Intents( 5639 ),
+	intents: [
+		GatewayIntentBits.Guilds +
+		GatewayIntentBits.GuildBans +
+		GatewayIntentBits.GuildMembers +
+		GatewayIntentBits.GuildMessages +
+		GatewayIntentBits.DirectMessages +
+		GatewayIntentBits.GuildMessageReactions
+	],
 
 	// https://discordjs.guide/additional-info/changes-in-v13.html#allowed-mentions
 	allowedMentions: {
@@ -41,7 +46,7 @@ bot.once( "ready", () =>
 //
 // Création des commandes.
 //
-bot.commands = new discord.Collection();
+bot.commands = new Collection();
 
 const { createCommands } = require( "./modules/commands_loader.js" );
 
@@ -146,14 +151,14 @@ bot.once( "ready", () =>
 {
 	bot.channels.fetch( settings.masterChannel ).then( channel =>
 	{
-		const messageEmbed = new discord.MessageEmbed()
+		const embedBuilder = new EmbedBuilder()
 			.setColor( settings.greenColor )
-			.setAuthor( { name: bot.user.username, iconURL: bot.user.avatarURL() } )
 			.setTitle( "Démarrage terminé" )
-			.setDescription( `Le robot « ${ bot.user.username } » a démarré avec succès.` )
-			.addField( "Serveurs présents :", bot.guilds.cache.size.toString() );
+			.setAuthor( { name: bot.user.username, iconURL: bot.user.avatarURL() } )
+			.addFields( { name: "Serveurs présents :", value: bot.guilds.cache.size.toString() } )
+			.setDescription( `Le robot « ${ bot.user.username } » a démarré avec succès.` );
 
-		channel.send( { embeds: [ messageEmbed ] } )
+		channel.send( { embeds: [ embedBuilder ] } )
 			.catch( console.error );
 	} );
 } );
