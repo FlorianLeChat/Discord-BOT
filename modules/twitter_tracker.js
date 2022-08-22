@@ -60,6 +60,7 @@ module.exports.streamTwitter = async ( bot ) =>
 	} );
 
 	stream.autoReconnect = true;
+	stream.autoReconnectRetries = Infinity;
 
 	stream.on( ETwitterStreamEvent.Data, async ( eventInfo ) =>
 	{
