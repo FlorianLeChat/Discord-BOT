@@ -1,0 +1,14 @@
+name: 'Vérification des dépendances'
+on: [pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Contrôle du dépôt'
+        uses: actions/checkout@v3
+      - name: 'Vérification des dépendances'
+        uses: actions/dependency-review-action@v2
