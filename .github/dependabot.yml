@@ -12,5 +12,5 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      # Check for updates managed by Composer once a month
+      # Check for updates managed by npm once a month
       interval: "monthly"
