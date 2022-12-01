@@ -8,6 +8,9 @@
     "type": "git",
     "url": "https://github.com/FlorianLeChat/Discord-BOT.git"
   },
+  "bugs": {
+    "url": "https://github.com/FlorianLeChat/Discord-BOT/issues"
+  },
   "scripts": {
     "start": "pm2 start index.js",
     "stop": "pm2 stop index.js",
