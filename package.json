@@ -22,7 +22,7 @@
     "moment": "~2.29",
     "iso-639-1": "~2.1",
     "discord.js": "~14.7",
-    "twitter-api-v2": "~1.13"
+    "twitter-api-v2": "~1.14"
   },
   "engines": {
     "node": ">=19",
