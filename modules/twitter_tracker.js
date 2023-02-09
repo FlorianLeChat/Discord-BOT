@@ -42,15 +42,9 @@ module.exports.streamTwitter = async ( bot ) =>
 	// On ajoute les comptes à suivre pour l'affichage des nouveaux tweets.
 	await client.v2.updateStreamRules( {
 		add: [
-			{ value: "from:217749896" }, 			// Marine <3
 			{ value: "from:338985020" }, 			// AFP (FR)
 			{ value: "from:24744541" }, 			// Le Monde (FR)
-			{ value: "from:1001029225476972545" }, 	// Ministère de l'intérieur (FR)
-			{ value: "from:2097571" }, 				// CNN International (US)
-			{ value: "from:742143" }, 				// BBC World (UK)
-			{ value: "from:19897138" },				// India Today (IND)
-			{ value: "from:56644534" }, 			// CCTV (CHN)
-			{ value: "from:64643056" } 				// RT (RUS)
+			{ value: "from:1001029225476972545" } 	// Ministère de l'intérieur (FR)
 		]
 	} );
 
