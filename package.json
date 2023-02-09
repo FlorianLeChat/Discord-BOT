@@ -17,12 +17,14 @@
     "restart": "pm2 restart index.js"
   },
   "dependencies": {
-    "pm2": "~5.2",
     "mysql": "~2.18",
     "moment": "~2.29",
     "iso-639-1": "~2.1",
     "discord.js": "~14.7",
     "twitter-api-v2": "~1.14"
+  },
+  "devDependencies": {
+    "pm2": "~5.2"
   },
   "engines": {
     "node": ">=19.6",
