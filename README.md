@@ -8,7 +8,7 @@ Créé en **mai 2016** sous **NodeJS 6** grâce à des tutoriels YouTube, le cod
 
 <ins>Voici les exigences pour exécuter le robot</ins> :
 * NodeJS **19.6+**
-* npm **9.3+**
+* npm **9.4+**
 
 ⚠️ Ce projet n'est pas conçu pour être utilisé dans un environnement de production.
 
