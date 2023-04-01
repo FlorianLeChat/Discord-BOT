@@ -24,7 +24,7 @@
     "twitter-api-v2": "~1.14"
   },
   "devDependencies": {
-    "pm2": "~5.2"
+    "pm2": "~5.3"
   },
   "engines": {
     "node": ">=19.6",
