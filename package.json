@@ -20,7 +20,7 @@
     "mysql": "~2.18",
     "moment": "~2.29",
     "iso-639-1": "~2.1",
-    "discord.js": "~14.9",
+    "discord.js": "~14.11",
     "twitter-api-v2": "~1.14"
   },
   "devDependencies": {
