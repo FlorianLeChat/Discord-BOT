@@ -7,6 +7,11 @@ updates:
     schedule:
       # Check for updates managed by GitHub Actions once a month
       interval: "monthly"
+    groups:
+      # Group together all dependencies in a single pull request
+      dependencies:
+        patterns:
+          - "*"
 
   # Maintain dependencies for npm
   - package-ecosystem: "npm"
@@ -14,4 +19,9 @@ updates:
     schedule:
       # Check for updates managed by npm once a month
       interval: "monthly"
-    open-pull-requests-limit: 10
+    groups:
+      # Group together all dependencies in a single pull request
+      dependencies:
+        patterns:
+          - "*"
+    open-pull-requests-limit: 30
