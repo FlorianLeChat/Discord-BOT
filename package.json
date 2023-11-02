@@ -1,20 +1,15 @@
 {
-  "main": "index.js",
   "name": "discord-bot",
-  "author": "Florian Trayon",
+  "author": "Florian Trayon (https://github.com/FlorianLeChat)",
   "license": "MIT",
   "private": true,
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/FlorianLeChat/Discord-BOT.git"
   },
   "bugs": {
     "url": "https://github.com/FlorianLeChat/Discord-BOT/issues"
-  },
-  "scripts": {
-    "start": "pm2 start index.js",
-    "stop": "pm2 stop index.js",
-    "restart": "pm2 restart index.js"
   },
   "dependencies": {
     "mysql": "~2.18",
@@ -23,11 +18,11 @@
     "discord.js": "~14.13",
     "twitter-api-v2": "~1.15"
   },
-  "devDependencies": {
-    "pm2": "~5.3"
-  },
   "engines": {
     "node": ">=20.5",
     "npm": ">=10.1"
+  },
+  "scripts": {
+    "start": "node index.js"
   }
 }
