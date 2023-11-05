@@ -1,4 +1,5 @@
 {
+  "main": "out/index.js",
   "name": "discord-bot",
   "author": "Florian Trayon (https://github.com/FlorianLeChat)",
   "license": "MIT",
@@ -31,7 +32,9 @@
   },
   "scripts": {
     "lint": "eslint . --fix --ext .js,.jsx,.ts,.tsx",
-    "start": "node index.js",
+    "start": "node .",
+    "build": "tsc",
+    "watch": "tsc --watch",
     "pretty": "prettier --write \"**/*.{js,jsx,ts,tsx}\""
   }
 }

@@ -3,10 +3,10 @@
     "include": ["**/*.ts"],
     "compilerOptions": {
         "lib": ["esnext"],
-        "noEmit": true,
+        "outDir": "out",
         "strict": true,
         "target": "esnext",
-        "module": "esnext",
+        "module": "nodenext",
         "allowJs": true,
         "incremental": true,
         "skipLibCheck": true,
@@ -18,12 +18,11 @@
         "isolatedModules": true,
         "esModuleInterop": true,
         "strictNullChecks": true,
-        "moduleResolution": "bundler",
+        "moduleResolution": "nodenext",
         "resolveJsonModule": true,
         "noImplicitOverride": true,
         "noUnusedParameters": true,
         "strictFunctionTypes": true,
-        "noFallthroughCasesInSwitch": true,
         "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true
     }
