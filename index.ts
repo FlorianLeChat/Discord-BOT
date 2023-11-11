@@ -2,13 +2,11 @@
 import "@total-typescript/ts-reset";
 
 // Importation des dépendances.
-import {
-	Client, Collection, Events, GatewayIntentBits
-} from "discord.js";
-import fs from "node:fs";
-import path from "node:path";
 import * as dotenv from "dotenv";
-import { pathToFileURL } from "url";
+import { Events, Client, GatewayIntentBits } from "discord.js";
+
+// Importation des fichiers utilitaires.
+import { loadCommands, registerCommands } from "./utilities/commands_loader";
 
 // Configuration des variables d'environnement.
 dotenv.config();
@@ -22,84 +20,78 @@ client.once( Events.ClientReady, ( c ) =>
 	console.log( `Ready! Logged in as ${ c.user.tag }` );
 } );
 
-// Chargement des commandes interactives.
-client.commands = new Collection();
-
-const foldersPath = path.join( __dirname, "commands" );
-console.log( foldersPath );
-const folders = fs.readdirSync( foldersPath );
-
-folders.forEach( ( folder ) =>
+// Création des commandes interactives.
+( async () =>
 {
-	const pathname = path.join( foldersPath, folder );
-	const files = fs
-		.readdirSync( pathname )
-		.filter( ( file ) => file.endsWith( ".js" ) );
+	// On charge les commandes interactives à partir des fichiers
+	//  présents dans le dossier dédié.
+	console.log( "[INFO] Début du chargement des commandes interactives." );
 
-	files.forEach( async ( file ) =>
+	client.slashCommands = await loadCommands();
+
+	console.log( 1, client.slashCommands );
+
+	console.log(
+		`[INFO] Fin de chargement des ${ client.slashCommands.size } commandes interactives.`
+	);
+
+	// On réalise ensuite leur enregistrement auprès de Discord.
+	console.log(
+		`[INFO] Début de l'enregistrement de ${ client.slashCommands.size } commandes.`
+	);
+
+	await registerCommands( client.slashCommands );
+
+	console.log( "[INFO] Fin de l'enregistrement des commandes interactives." );
+
+	// On ajoute enfin un gestionnaire d'évènements pour les commandes
+	client.on( Events.InteractionCreate, async ( interaction ) =>
 	{
-		const filePath = path.join( pathname, file );
-		const command = await import( pathToFileURL( filePath ).href );
+		// Vérification que l'interaction est bien une commande.
+		if ( !interaction.isChatInputCommand() ) return;
 
-		console.log( command );
-
-		if ( "data" in command && "execute" in command )
-		{
-			client.commands.set( command.data.name, command );
-		}
-		else
-		{
-			console.log(
-				`[WARNING] The command at ${ filePath } is missing a required "data" or "execute" property.`
-			);
-		}
-	} );
-} );
-
-// Exécution des commandes interactives.
-client.on( Events.InteractionCreate, async ( interaction ) =>
-{
-	if ( !interaction.isChatInputCommand() ) return;
-
-	const command = interaction.client.commands.get(
-		interaction.commandName
-	) as {
-		execute: ( interaction: unknown ) => Promise<void>;
-	};
-
-	if ( !command )
-	{
-		console.error(
-			`No command matching ${ interaction.commandName } was found.`
+		// Récupération de la commande.
+		const command = interaction.client.slashCommands.get(
+			interaction.commandName
 		);
 
-		return;
-	}
-
-	try
-	{
-		await command.execute( interaction );
-	}
-	catch ( error )
-	{
-		console.error( error );
-
-		if ( interaction.replied || interaction.deferred )
+		if ( !command )
 		{
-			await interaction.followUp( {
-				content: "There was an error while executing this command!",
-				ephemeral: true
-			} );
+			// Message d'erreur en cas de commande inconnue.
+			console.error(
+				`No command matching ${ interaction.commandName } was found.`
+			);
+
+			return;
 		}
-		else
+
+		try
 		{
-			await interaction.reply( {
-				content: "There was an error while executing this command!",
-				ephemeral: true
-			} );
+			// Exécution de la commande.
+			await command.execute( interaction );
 		}
-	}
-} );
+		catch ( error )
+		{
+			// Message d'erreur en cas d'erreur d'exécution.
+			console.error( error );
+
+			if ( interaction.replied || interaction.deferred )
+			{
+				await interaction.followUp( {
+					content: "There was an error while executing this command!",
+					ephemeral: true
+				} );
+			}
+			else
+			{
+				await interaction.reply( {
+					content: "There was an error while executing this command!",
+					ephemeral: true
+				} );
+			}
+		}
+	} );
+} )();
 
 // Authentification et connexion du robot.
 client.login( process.env.BOT_TOKEN );

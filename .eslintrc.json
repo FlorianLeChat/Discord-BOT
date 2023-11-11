@@ -12,6 +12,7 @@
 		"eol-last": ["error", "never"],
 		"no-shadow": "off", // -> @typescript-eslint/no-shadow
 		"camelcase": ["error", { "ignoreImports": true, "properties": "never" }],
+		"no-console": "off",
 		"no-plusplus": "off",
 		"brace-style": ["error", "allman"],
 		"comma-dangle": ["error", "never"],
