@@ -29,8 +29,6 @@ client.once( Events.ClientReady, ( c ) =>
 
 	client.slashCommands = await loadCommands();
 
-	console.log( 1, client.slashCommands );
-
 	console.log(
 		`[INFO] Fin de chargement des ${ client.slashCommands.size } commandes interactives.`
 	);
@@ -40,7 +38,9 @@ client.once( Events.ClientReady, ( c ) =>
 		`[INFO] Début de l'enregistrement de ${ client.slashCommands.size } commandes.`
 	);
 
-	await registerCommands( client.slashCommands );
+	await registerCommands(
+		client.slashCommands.map( ( command ) => command.command )
+	);
 
 	console.log( "[INFO] Fin de l'enregistrement des commandes interactives." );
 

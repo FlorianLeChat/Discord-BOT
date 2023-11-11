@@ -2,7 +2,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "url";
-import { REST, Routes, Collection } from "discord.js";
+import {
+	REST, Routes, Collection, type SlashCommandBuilder
+} from "discord.js";
 
 // Importation des types.
 import type { SlashCommand } from "../@types/discord";
@@ -70,7 +72,7 @@ export async function loadCommands(): Promise<
 // Enregistrement des commandes interactives.
 //
 export async function registerCommands(
-	commands: Collection<string, SlashCommand>
+	commands: SlashCommandBuilder[]
 ): Promise<void>
 {
 	// On créé d'abord une instance de l'API REST.
