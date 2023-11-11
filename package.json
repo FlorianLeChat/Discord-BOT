@@ -21,6 +21,7 @@
     "twitter-api-v2": "~1.15"
   },
   "devDependencies": {
+    "nodemon": "~3.0",
     "prettier": "~3.0",
     "typescript": "~5.2",
     "eslint-config-airbnb": "~19.0",
@@ -31,6 +32,7 @@
     "npm": ">=10.1"
   },
   "scripts": {
+    "dev": "nodemon .",
     "lint": "eslint . --fix --ext .js,.jsx,.ts,.tsx",
     "start": "node .",
     "build": "tsc",
