@@ -11,6 +11,13 @@ import type {
 	ChatInputCommandInteraction
 } from "discord.js";
 
+export interface BotEvent {
+	// Évènements du bot.
+	name: string;
+	once?: boolean | false;
+	execute: ( ...args ) => void;
+}
+
 export interface Command {
 	name: string;
 	aliases: Array<string>;
