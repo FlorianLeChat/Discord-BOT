@@ -16,22 +16,16 @@ dotenv.config( { path: ".env.local", override: true } );
 // Création de l'instance du robot.
 const client = new Client( { intents: [ GatewayIntentBits.Guilds ] } );
 
-
-// Création des événements personnalisés.
 ( async () =>
 {
-	console.log( 2 );
+	// Création des événements personnalisés.
 	console.log( "[INFO] Début du chargement des événements personnalisés." );
 
 	registerEvents( client );
 
 	console.log( "[INFO] Fin de chargement des événements personnalisés." );
-} )();
 
-// Création des commandes interactives.
-( async () =>
-{
-	// Chargement des commandes interactives depuis le système de fichiers.
+	// Création des commandes interactives.
 	console.log( "[INFO] Début du chargement des commandes interactives." );
 
 	client.slashCommands = await loadCommands();
@@ -40,7 +34,6 @@ const client = new Client( { intents: [ GatewayIntentBits.Guilds ] } );
 		`[INFO] Fin de chargement des ${ client.slashCommands.size } commandes interactives.`
 	);
 
-	// Enregistrement des commandes interactives auprès de Discord.
 	console.log(
 		`[INFO] Début de l'enregistrement de ${ client.slashCommands.size } commandes.`
 	);
@@ -50,7 +43,7 @@ const client = new Client( { intents: [ GatewayIntentBits.Guilds ] } );
 	);
 
 	console.log( "[INFO] Fin de l'enregistrement des commandes interactives." );
-} )();
 
-// Authentification et connexion du robot.
-client.login( process.env.BOT_TOKEN );
+	// Authentification et connexion du robot.
+	client.login( process.env.BOT_TOKEN );
+} )();

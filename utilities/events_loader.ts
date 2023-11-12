@@ -19,7 +19,9 @@ export function registerEvents( client: Client ): void
 	files.forEach( async ( file ) =>
 	{
 		const filePath = path.join( directory, file );
-		const event: BotEvent = await import( pathToFileURL( filePath ).href );
+		const event = Object.values(
+			( await import( pathToFileURL( filePath ).href ) ).default
+		)[ 0 ] as BotEvent;
 
 		// On vérifie enfin si l'événement doit être exécuté une seule fois
 		//  ou non afin de l'enregistrer correctement.
