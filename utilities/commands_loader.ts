@@ -1,10 +1,8 @@
-// Importation des dépendance.
+// Importation des dépendances.
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "url";
-import {
-	REST, Routes, Collection, type SlashCommandBuilder
-} from "discord.js";
+import { REST, Routes, Collection } from "discord.js";
 
 // Importation des types.
 import type { SlashCommand } from "../@types/discord";
@@ -19,11 +17,16 @@ export async function loadCommands(): Promise<
 	Collection<string, SlashCommand>
 	>
 {
+	// On créé d'abord une promesse pour chaque fichier de commande
+	//  afin de les stocker dans un tableau.
 	const promises = [] as Promise<void>[];
 	const commands = new Collection<string, SlashCommand>();
 
+	// On parcourt ensuite chaque dossier de commandes.
 	folders.forEach( async ( folder ) =>
 	{
+		// On récupère alors le chemin du dossier et la liste des fichiers
+		//  qu'il contient afin de les parcourir.
 		const pathname = path.join( directory, folder );
 		const files = fs
 			.readdirSync( pathname )
@@ -31,6 +34,8 @@ export async function loadCommands(): Promise<
 
 		files.forEach( async ( file ) =>
 		{
+			// On créé ensuite une promesse pour chaque fichier de commande
+			//  afin de les traiter en même temps plus tard.
 			promises.push(
 				new Promise<void>( ( resolve ) =>
 				{
@@ -38,6 +43,8 @@ export async function loadCommands(): Promise<
 
 					import( pathToFileURL( filePath ).href ).then( ( command ) =>
 					{
+						// On vérifie que le fichier contient bien une commande
+						//  interactive et on l'ajoute à la collection.
 						if ( "data" in command && "execute" in command )
 						{
 							commands.set( command.data.name, {
@@ -63,6 +70,8 @@ export async function loadCommands(): Promise<
 		} );
 	} );
 
+	// On attend enfin que toutes les promesses soient résolues
+	//  et on retourne la collection de commandes.
 	await Promise.all( promises );
 
 	return commands;
@@ -72,7 +81,7 @@ export async function loadCommands(): Promise<
 // Enregistrement des commandes interactives.
 //
 export async function registerCommands(
-	commands: SlashCommandBuilder[]
+	commands: SlashCommand["command"][]
 ): Promise<void>
 {
 	// On créé d'abord une instance de l'API REST.
