@@ -21,9 +21,11 @@
     "twitter-api-v2": "~1.15"
   },
   "devDependencies": {
+    "husky": "~8.0",
     "nodemon": "~3.0",
     "prettier": "~3.0",
     "typescript": "~5.2",
+    "lint-staged": "~15.0",
     "eslint-config-airbnb": "~19.0",
     "@total-typescript/ts-reset": "~0.5",
     "@typescript-eslint/eslint-plugin": "~6.9"
@@ -34,10 +36,12 @@
   },
   "scripts": {
     "dev": "nodemon .",
-    "lint": "eslint . --fix --ext .js,.jsx,.ts,.tsx",
+    "lint": "eslint . --fix --ext .ts",
     "start": "node .",
     "build": "tsc",
     "watch": "tsc --watch",
-    "pretty": "prettier --write \"**/*.{js,jsx,ts,tsx}\""
+    "pretty": "prettier --write \"**/*.ts\"",
+    "prepare": "husky install",
+    "lint-staged": "lint-staged"
   }
 }
