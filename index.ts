@@ -3,6 +3,7 @@ import "@total-typescript/ts-reset";
 
 // Importation des dépendances.
 import * as dotenv from "dotenv";
+import * as Sentry from "@sentry/node";
 import { Client, GatewayIntentBits } from "discord.js";
 
 // Importation des fichiers utilitaires.
@@ -12,6 +13,21 @@ import { loadCommands, registerCommands } from "./utilities/commands_loader";
 // Configuration des variables d'environnement.
 dotenv.config();
 dotenv.config( { path: ".env.local", override: true } );
+
+// Initialisation de Sentry.
+if ( process.env.SENTRY_ENABLED === "true" )
+{
+	Sentry.init( {
+		dsn: process.env.SENTRY_DSN,
+		debug: false,
+		integrations: [
+			new Sentry.Integrations.Http( { tracing: true } ),
+			...Sentry.autoDiscoverNodePerformanceMonitoringIntegrations()
+		],
+		tracesSampleRate: process.env.NODE_ENV === "development" ? 1.0 : 0.1,
+		profilesSampleRate: process.env.NODE_ENV === "development" ? 1.0 : 0.1
+	} );
+}
 
 // Création de l'instance du robot.
 const client = new Client( { intents: [ GatewayIntentBits.Guilds ] } );
