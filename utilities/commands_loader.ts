@@ -41,19 +41,22 @@ export async function loadCommands(): Promise<
 				{
 					const filePath = path.join( pathname, file );
 
-					import( pathToFileURL( filePath ).href ).then( ( command ) =>
+					import( pathToFileURL( filePath ).href ).then( ( module ) =>
 					{
 						// On vérifie que le fichier contient bien une commande
 						//  interactive et on l'ajoute à la collection.
-						if ( "data" in command && "execute" in command )
+						if (
+							"command" in module.data
+							&& "execute" in module.data
+						)
 						{
-							commands.set( command.data.name, {
-								command: command.data,
-								execute: command.execute
+							commands.set( module.data.command.name, {
+								command: module.data.command,
+								execute: module.data.execute
 							} );
 
 							console.log(
-								`[INFO] Chargement de la commande ${ command.data.name }, située à ${ filePath }.`
+								`[INFO] Chargement de la commande ${ module.data.command.name }, située à ${ filePath }.`
 							);
 						}
 						else
