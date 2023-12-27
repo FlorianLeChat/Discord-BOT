@@ -1,7 +1,7 @@
 //
 // Commande de suppression d'un ou plusieurs messages.
 //
-import { SlashCommandBuilder } from "discord.js";
+import { ChannelType, SlashCommandBuilder } from "discord.js";
 import type { SlashCommand } from "../../@types/discord";
 
 export const data: SlashCommand = {
@@ -19,6 +19,14 @@ export const data: SlashCommand = {
 		{
 			return interaction.reply( {
 				content: "You need to input a number between 1 and 99.",
+				ephemeral: true
+			} );
+		}
+
+		if ( interaction.channel?.type !== ChannelType.GuildText )
+		{
+			return interaction.reply( {
+				content: "Only text channels are supported.",
 				ephemeral: true
 			} );
 		}

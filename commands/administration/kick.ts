@@ -14,10 +14,18 @@ export const data: SlashCommand = {
 			.setRequired( true ) ),
 	execute: ( interaction ) =>
 	{
-		const member = interaction.options.getMember( "target" );
+		const user = interaction.options.getUser( "target" );
+
+		if ( !user )
+		{
+			return interaction.reply( {
+				content: "No user has been selected.",
+				ephemeral: true
+			} );
+		}
 
 		return interaction.reply( {
-			content: `You wanted to kick: ${ member?.user.username }`,
+			content: `You wanted to kick: ${ user.username }`,
 			ephemeral: true
 		} );
 	}

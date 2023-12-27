@@ -17,15 +17,15 @@ export const data: SlashCommand = {
 	{
 		const user = interaction.options.getUser( "target" );
 
-		if ( user )
+		if ( !user )
 		{
 			return interaction.reply(
-				`${ user.username }'s avatar: ${ user.displayAvatarURL() }`
+				`Your avatar: ${ interaction.user.displayAvatarURL() }`
 			);
 		}
 
 		return interaction.reply(
-			`Your avatar: ${ interaction.user.displayAvatarURL() }`
+			`${ user.username }'s avatar: ${ user.displayAvatarURL() }`
 		);
 	}
 };
