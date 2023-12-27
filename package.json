@@ -15,7 +15,8 @@
   "dependencies": {
     "dotenv": "~16.3",
     "discord.js": "~14.14",
-    "@sentry/node": "~7.84"
+    "@sentry/node": "~7.84",
+    "@total-typescript/ts-reset": "~0.5"
   },
   "devDependencies": {
     "husky": "~8.0",
@@ -24,7 +25,6 @@
     "typescript": "~5.3",
     "lint-staged": "~15.1",
     "eslint-config-airbnb": "~19.0",
-    "@total-typescript/ts-reset": "~0.5",
     "@typescript-eslint/eslint-plugin": "~6.13"
   },
   "engines": {
