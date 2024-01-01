@@ -4,7 +4,7 @@ import "@total-typescript/ts-reset";
 // Importation des dépendances.
 import * as dotenv from "dotenv";
 import * as Sentry from "@sentry/node";
-import { Client, GatewayIntentBits } from "discord.js";
+import { Client, Collection, GatewayIntentBits } from "discord.js";
 
 // Importation des fichiers utilitaires.
 import { registerEvents } from "./utilities/events_loader";
@@ -44,6 +44,7 @@ const client = new Client( { intents: [ GatewayIntentBits.Guilds ] } );
 	// Création des commandes interactives.
 	console.log( "[INFO] Début du chargement des commandes interactives." );
 
+	client.cooldowns = new Collection();
 	client.slashCommands = await loadCommands();
 
 	console.log(

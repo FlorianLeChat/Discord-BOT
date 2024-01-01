@@ -51,8 +51,7 @@ export async function loadCommands(): Promise<
 						)
 						{
 							commands.set( module.data.command.name, {
-								command: module.data.command,
-								execute: module.data.execute
+								...module.data
 							} );
 
 							console.log(
