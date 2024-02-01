@@ -38,7 +38,7 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "pretty": "prettier --write \"**/*.ts\"",
-    "prepare": "husky install",
+    "prepare": "husky",
     "lint-staged": "lint-staged"
   }
 }
