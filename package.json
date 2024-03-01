@@ -15,17 +15,17 @@
   "dependencies": {
     "dotenv": "~16.4",
     "discord.js": "~14.14",
-    "@sentry/node": "~7.99",
+    "@sentry/node": "~7.104",
     "@total-typescript/ts-reset": "~0.5"
   },
   "devDependencies": {
     "husky": "~9.0",
-    "nodemon": "~3.0",
+    "nodemon": "~3.1",
     "prettier": "~3.2",
     "typescript": "~5.3",
     "lint-staged": "~15.2",
     "eslint-config-airbnb": "~19.0",
-    "@typescript-eslint/eslint-plugin": "~6.20"
+    "@typescript-eslint/eslint-plugin": "~7.1"
   },
   "engines": {
     "node": ">=18.0",
